@@ -1,0 +1,73 @@
+/* 5 · «Se ve así». Celular y tableta: todo apilado dentro del relleno; la tira es carrusel. */
+.seVe {
+  --relleno: clamp(20px, 4vw, 72px);
+  border-top: 1px solid var(--color-linea);
+}
+.titulo {
+  padding-inline: var(--relleno);
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  font-variation-settings: "wdth" 88;
+  color: var(--color-hueso);
+}
+.tira,
+.par,
+.sola,
+.telefonos {
+  margin-top: 40px;
+}
+.par,
+.sola,
+.telefonos {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-inline: var(--relleno);
+}
+/* en el carrusel del celular, la figura llena su cuadro */
+@media (max-width: 1023px) {
+  .tira :global(li) > div {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .seVe {
+    --relleno: max(52px, 4vw);
+    padding-block: 12svh;
+  }
+  .tira {
+    margin-top: 7svh;
+    padding-inline: var(--relleno);
+  }
+  /* dos: escalonadas, de orilla a orilla */
+  .par {
+    display: block;
+    position: relative;
+    margin-top: 7svh;
+    padding: 0;
+  }
+  .par .uno {
+    margin-left: 0;
+  }
+  .par .dos {
+    margin: -12vw 0 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  /* la primera: su pie arriba a la derecha, fuera del alcance de la segunda */
+  .sola {
+    margin-top: 7svh;
+    padding: 0;
+    align-items: flex-end;
+  }
+  .telefonos {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6vw;
+    margin-top: 10svh;
+  }
+}

@@ -1,0 +1,119 @@
+/* Fila + · También. Celular y tableta: apilado dentro del relleno. Escritorio, en diagonal: «También» gigante arriba a
+   la izquierda, la captura (50vw, −2°) debajo; el cuaderno (44vw, 3°) arriba a la derecha saliéndose por la orilla, y
+   el texto debajo de él. La orilla izquierda (6vw) queda libre para la línea. */
+.escena {
+  display: block;
+}
+.uno,
+.varios {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.rotulo {
+  padding-inline: var(--relleno);
+  font-size: clamp(2.75rem, 11vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  font-variation-settings: "wdth" 85;
+  color: var(--color-hueso);
+}
+.texto {
+  padding-inline: var(--relleno);
+  max-width: calc(30rem + 2 * var(--relleno));
+}
+.nombre {
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 90;
+  color: var(--color-hueso);
+}
+.enlaceNombre {
+  transition: color var(--dur-micro) ease;
+}
+.enlaceNombre:hover {
+  color: var(--color-ambar);
+}
+.flechita {
+  margin-left: 0.3em;
+  font-family: var(--letra-mono);
+  font-size: 0.6em;
+  color: var(--color-ambar);
+}
+.linea {
+  margin-top: 0.9rem;
+  font-size: 1.125rem;
+  color: var(--color-hueso-apagado);
+}
+.boton {
+  margin-top: 1.5rem;
+}
+.vista {
+  display: block;
+}
+.cuaderno {
+  margin-inline: var(--relleno);
+}
+.cuaderno [data-cuaderno] {
+  border-radius: 12px;
+  cursor: pointer;
+}
+.cuaderno [data-cuaderno]:focus-visible {
+  outline: 2px dashed var(--color-ambar);
+  outline-offset: 6px;
+}
+.rejilla {
+  display: grid;
+  gap: 2.5rem 1.5rem;
+  padding-inline: var(--relleno);
+}
+@media (min-width: 640px) {
+  .rejilla {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .uno {
+    display: grid;
+    grid-template-columns: 6vw 50vw 3vw minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      ". rotulo . cuaderno"
+      ". vista  . cuaderno"
+      ". vista  . texto";
+    align-items: start;
+    gap: 0;
+    min-height: calc(100svh - 2 * clamp(48px, 8svh, 96px));
+    align-content: center;
+  }
+  .rotulo {
+    grid-area: rotulo;
+    padding: 0;
+    margin-bottom: clamp(1.5rem, 4svh, 3rem);
+    font-size: clamp(4rem, 9vw, 10rem);
+  }
+  .vista {
+    grid-area: vista;
+  }
+  /* el cuaderno: 50vw, inclinado 3°, saliéndose ~7vw por la orilla derecha */
+  .cuaderno {
+    grid-area: cuaderno;
+    width: 50vw;
+    margin: clamp(8px, 2svh, 24px) 0 0 -2vw;
+    rotate: 3deg;
+    transform-origin: 30% 50%;
+  }
+  .texto {
+    grid-area: texto;
+    padding: clamp(1rem, 3svh, 2rem) 5vw 0 0;
+    max-width: 34rem;
+  }
+  .rejilla {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-inline: 6vw;
+  }
+}

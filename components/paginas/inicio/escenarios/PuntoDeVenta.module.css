@@ -1,0 +1,98 @@
+/* Escenario 9 · Punto de venta. Celular y tableta: apilado dentro del relleno. Escritorio: texto a la izquierda y la
+   vista a 58vw a la derecha; abajo, la colmena saliéndose por la orilla izquierda, un pasillo y la tira de capturas. */
+.escena {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.numero {
+  top: clamp(8px, 2svh, 24px);
+  left: auto;
+  right: var(--relleno);
+}
+.arriba,
+.abajo {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.titulo {
+  font-size: clamp(2rem, 4.4vw, 4.25rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 90;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+.resumen {
+  margin-top: 1rem;
+  color: var(--color-hueso-apagado);
+  font-size: 1.125rem;
+}
+.pildoras {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.boton {
+  margin-top: 1.75rem;
+}
+.pasillo {
+  display: none;
+}
+/* La colmena va sin foto (la prueba ya es la vista grande): fuera su marco con cinta y la sombra del marco. */
+.colmena :global([data-g="foto"]),
+.colmena :global([data-g="foto-sombra"]) {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .escena {
+    justify-content: center;
+    gap: 0;
+  }
+  .numero {
+    top: clamp(16px, 3svh, 40px);
+    left: var(--relleno);
+    right: auto;
+  }
+  /* Arriba: el texto junto a la vista; la orilla derecha (5vw) queda libre para la línea. */
+  .arriba {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 3vw;
+    padding-right: 5vw;
+  }
+  .texto {
+    padding-top: clamp(96px, 14svh, 180px);
+  }
+  .vista {
+    margin-top: clamp(24px, 4svh, 48px);
+  }
+  /* Abajo: la colmena sube junto al pie de la vista y se sale por la orilla izquierda; la tira al lado. */
+  .abajo {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 0;
+    margin-top: -4vw;
+    padding-right: 5vw;
+  }
+  .colmena {
+    flex: none;
+  }
+  .pasillo {
+    display: block;
+    flex: 0 0 5vw;
+    align-self: stretch;
+  }
+  .tira {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-bottom: 2vw;
+  }
+}

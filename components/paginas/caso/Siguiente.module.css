@@ -1,0 +1,108 @@
+/* 7 · «Siguiente caso»: franja a toda la ventana; el enlace la cubre entera. */
+.franja {
+  --relleno: clamp(20px, 4vw, 72px);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 56px var(--relleno) 48px;
+  border-top: 1px solid var(--color-linea-viva);
+  border-bottom: 1px solid var(--color-linea-viva);
+}
+.numero {
+  position: absolute;
+  z-index: -1;
+  right: var(--relleno);
+  top: 12px;
+  font-family: var(--letra-mono);
+  font-size: min(40vw, 16rem);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: var(--color-linea);
+  pointer-events: none;
+}
+.numero::before {
+  content: attr(data-numero);
+}
+.enlace {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-hueso);
+  text-decoration: none;
+}
+/* toda la franja responde */
+.enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.enlace:focus-visible {
+  outline: none;
+}
+.enlace:focus-visible::after {
+  outline: 2px solid var(--color-ambar);
+  outline-offset: -6px;
+}
+.rotulo {
+  color: var(--color-ambar);
+}
+.titulo {
+  margin-top: 0.75rem;
+  max-width: 14ch;
+  font-size: clamp(3rem, 10vw, 11rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  font-variation-settings: "wdth" 84;
+  text-wrap: balance;
+  transition: color var(--dur-micro) ease;
+}
+.franja:hover .titulo,
+.enlace:focus-visible .titulo {
+  color: var(--color-ambar);
+}
+.resumen {
+  margin-top: 1.25rem;
+  max-width: 36rem;
+  font-size: 1.125rem;
+  line-height: 1.45;
+  color: var(--color-hueso-apagado);
+}
+.invento {
+  width: min(100%, 420px);
+  margin-left: auto;
+  pointer-events: none;
+}
+.invento :global([data-g="foto"]),
+.invento :global([data-g="sombra-foto"]),
+.invento :global([data-g="foto-sombra"]) {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .franja {
+    --relleno: max(52px, 4vw);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 72svh;
+    padding-block: 10svh;
+  }
+  .numero {
+    top: auto;
+    bottom: -2svh;
+    font-size: min(28vw, 50svh);
+  }
+  .enlace {
+    flex: 1 1 auto;
+  }
+  .invento {
+    flex: 0 0 28vw;
+    width: 28vw;
+    margin-right: -3vw;
+  }
+}

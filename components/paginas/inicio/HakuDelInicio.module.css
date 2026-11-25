@@ -1,0 +1,39 @@
+/* Haku en el inicio (HakuDelInicio.tsx). El guía (components/mundo/guia) no se toca: aquí solo se le dice cuándo se ve,
+   cómo cae al piso y su tamaño en celular. La caja de Haku es el primer <div> del guía; se mueve con `translate`
+   (independiente del `transform` con el que el motor la lleva de lado a lado). */
+.guia {
+  display: contents;
+}
+
+/* Arriba del todo, Haku está en la mesa de la portada: el guía no se ve (ni su globo ni su interruptor). */
+:global(html[data-haku-guia="arriba"]) .guia :global([data-guia]) {
+  visibility: hidden;
+}
+
+/* El salto de la mesa al piso: cae desde arriba, rebota una vez y se queda. */
+.guia[data-salta] :global([data-guia]) > div:first-of-type {
+  animation: cae 0.62s cubic-bezier(0.3, 0, 0.4, 1) both;
+}
+@keyframes cae {
+  0% {
+    translate: 18vw -42svh;
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  62% {
+    translate: 0 0;
+  }
+  78% {
+    translate: 0 -14px;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guia[data-salta] :global([data-guia]) > div:first-of-type {
+    animation: none;
+  }
+}

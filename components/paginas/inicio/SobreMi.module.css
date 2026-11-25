@@ -1,0 +1,108 @@
+/* Fila S · Sobre mí. Celular y tableta: título, texto, ficha y la repisa dentro del relleno (con < 600 px de ancho la
+   repisa usa su composición vertical). Escritorio: el texto en dos columnas arriba y la repisa a 118vw cruzando la
+   ventana de pared a pared (la tabla se sale por las dos orillas; la sección recorta: no hay barra horizontal). */
+.escena {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.arriba {
+  padding-inline: var(--relleno);
+}
+.titulo {
+  font-size: clamp(2.75rem, 11vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  font-variation-settings: "wdth" 85;
+  color: var(--color-hueso);
+}
+.prosa {
+  margin-top: 1.75rem;
+  max-width: 34rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-hueso);
+}
+.prosa > :global(p) + :global(p) {
+  margin-top: 0.9em;
+}
+.ficha {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1.25rem 2.5rem;
+  max-width: 34rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-linea);
+}
+.valor {
+  margin-top: 0.4rem;
+  color: var(--color-hueso);
+}
+.pista {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding-inline: var(--relleno);
+  color: var(--color-hueso-apagado);
+}
+.flecha {
+  color: var(--color-ambar);
+}
+.repisa {
+  position: relative;
+  margin-inline: var(--relleno);
+}
+
+@media (min-width: 640px) {
+  .ficha {
+    grid-template-columns: repeat(3, minmax(0, auto));
+    max-width: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .escena {
+    gap: 0;
+    padding-bottom: 0;
+  }
+  .arriba {
+    display: grid;
+    grid-template-columns: minmax(0, 34rem) minmax(0, 34rem);
+    column-gap: clamp(2.5rem, 5vw, 6rem);
+    /* la orilla izquierda (6vw) queda libre para la línea */
+    padding-inline: 6vw max(var(--relleno), 6vw);
+  }
+  .titulo {
+    grid-column: 1 / -1;
+    font-size: clamp(4rem, 7.4vw, 8.5rem);
+  }
+  /* el texto en dos columnas de ≤ 34rem; la ficha cruza las dos */
+  .prosa {
+    grid-column: 1 / -1;
+    max-width: calc(68rem + clamp(2.5rem, 5vw, 6rem));
+    columns: 2;
+    column-gap: clamp(2.5rem, 5vw, 6rem);
+    font-size: clamp(1.125rem, 1.25vw, 1.3125rem);
+  }
+  .prosa > :global(p) {
+    break-inside: avoid;
+  }
+  .ficha {
+    grid-column: 1 / -1;
+    margin-top: 2.25rem;
+  }
+  .pista {
+    margin-top: clamp(1.5rem, 4svh, 3rem);
+    padding-left: 6vw;
+  }
+  /* la repisa de pared a pared: 102vw (más ancha que la ventana), de −1vw a 101vw: la tabla se sale por las dos
+     orillas y la cola de Haku (al 97 % del dibujo) queda a ~2vw de la derecha, entera. La línea viva la cruza por
+     detrás (`data-linea="detras"`); los objetos, que son botones, los esquiva. */
+  .repisa {
+    align-self: flex-start;
+    width: 102vw;
+    margin: 0 0 0 -1vw;
+  }
+}

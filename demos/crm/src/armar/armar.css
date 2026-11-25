@@ -1,0 +1,601 @@
+/* ── Armar un expediente y la IA (BRIEF-4 §4.E) ── */
+
+/* el armado: los datos a la izquierda; el odontograma y los estudios a la derecha; la acción abajo */
+.arm-cuerpo {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 14px 22px;
+  min-height: 0;
+}
+.arm-form {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px 6px 8px 2px;
+}
+.arm-fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 84px;
+  gap: 10px;
+}
+.arm-form textarea {
+  min-height: 84px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--r-control);
+  background: #f1f0ec;
+  color: var(--tinta);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  resize: vertical;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.14);
+}
+.arm-form textarea:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 1px;
+}
+.arm-form input[aria-invalid] {
+  box-shadow: inset 0 0 0 1.5px #9a3412;
+}
+.arm-sugerencias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+/* un interruptor de texto: apagado, línea fina; prendido, tinta */
+.arm-chip {
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: var(--r-control);
+  color: var(--tinta);
+  font-size: 14px;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.2);
+  transition: background-color 0.2s, color 0.2s;
+}
+.arm-chip:hover:not(:disabled) {
+  background: rgba(24, 25, 25, 0.05);
+}
+.arm-chip[aria-pressed="true"] {
+  background: var(--tinta);
+  color: #fff;
+  box-shadow: none;
+}
+.arm-chip:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}
+.arm-chip:disabled {
+  opacity: 0.45;
+}
+.arm-chip-chico {
+  min-height: 32px;
+  padding: 0 11px;
+  font-size: 13.5px;
+}
+/* las caras de una pieza: marcadas, con su color clínico a la izquierda */
+.arm-chip-cara[aria-pressed="true"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #fff;
+  color: var(--tinta);
+  box-shadow: inset 0 0 0 1.5px var(--marca);
+}
+.arm-chip-cara[aria-pressed="true"]::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--marca);
+}
+
+.arm-lado {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px 2px 8px;
+}
+.arm-odonto,
+.arm-estudios {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fcfbf8;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.08);
+}
+/* aquí el odontograma ya va sobre el papel del panel: sin su tarjeta propia (esa sombra es para cuando va sobre un degradado) */
+.arm-odonto .odontograma {
+  background: none;
+  box-shadow: none;
+}
+.arm-odonto .exp-subtitulo,
+.arm-estudios .exp-subtitulo {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+}
+.arm-odonto-cabeza {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+/* el pincel: tres botones; el de color lleva su muestra */
+.arm-pincel {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: calc(var(--r-control) + 3px);
+  background: #efeee9;
+}
+.arm-pincel-opcion {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--r-control);
+  color: var(--tinta);
+  font-size: 14px;
+}
+.arm-pincel-opcion[data-pincel="por-tratar"]::before,
+.arm-pincel-opcion[data-pincel="realizado"]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--pincel);
+}
+.arm-pincel-opcion[aria-checked="true"] {
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(24, 25, 25, 0.12);
+}
+.arm-pincel-opcion:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 1px;
+}
+.odontograma svg[data-editable] .odo-cara {
+  cursor: crosshair;
+}
+.odontograma svg[data-editable] .odo-cara:hover {
+  stroke: var(--tinta);
+  stroke-width: 1.2;
+}
+.arm-pieza {
+  display: grid;
+  gap: 8px;
+}
+.arm-pieza-nombre {
+  margin: 0;
+  font-size: 15px;
+  color: var(--tinta-2);
+}
+.arm-pieza-n {
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--tinta);
+  margin-right: 4px;
+}
+.arm-pista {
+  margin: 0;
+  font-size: 14px;
+  color: var(--tinta-2);
+}
+
+/* la bandeja de radiografías dibujadas */
+.arm-bandeja {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.arm-estudio {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  padding: 8px 8px 10px;
+  border-radius: 12px;
+  text-align: left;
+  color: var(--tinta);
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.12);
+  transition: box-shadow 0.2s, background-color 0.2s;
+}
+.arm-estudio:hover {
+  background: rgba(24, 25, 25, 0.035);
+}
+.arm-estudio[aria-pressed="true"] {
+  background: #fff;
+  box-shadow: inset 0 0 0 2px var(--tinta);
+}
+.arm-estudio:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}
+.radio-mini {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background: radial-gradient(120% 90% at 50% 50%, #2f383c 0%, #161b1d 100%);
+  line-height: 0;
+}
+.radio-mini svg {
+  width: 100%;
+  height: auto;
+}
+/* en chico, los números de la panorámica son ruido */
+.radio-mini text {
+  display: none;
+}
+.arm-estudio-nombre {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.arm-estudio-que {
+  font-size: 13px;
+  color: var(--tinta-2);
+}
+.arm-estudio[aria-pressed="true"] .arm-estudio-que {
+  color: var(--tinta);
+}
+
+.arm-pie {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+.arm-falta {
+  margin: 0;
+  font-size: 14px;
+  color: #9a3412;
+}
+.arm-mandar:focus-visible {
+  outline: 2px solid var(--tinta);
+}
+
+/* ── El pseudo-chat ── */
+.arm-chat {
+  display: grid;
+  min-height: 0;
+}
+/* angosto: tu tarjeta arriba y la conversación debajo, todo en una columna que se recorre */
+.chat {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-height: 0;
+  overflow-y: auto;
+  width: min(820px, 100%);
+  justify-self: center;
+  padding: 0 4px 4px 0;
+}
+.chat-expediente {
+  justify-self: end;
+  max-width: 88%;
+}
+.chat-expediente > .chat-quien {
+  text-align: right;
+}
+.chat-hilo {
+  padding: 4px 4px 8px;
+}
+/* ancho: tu tarjeta fija a la izquierda y la conversación a la derecha (así no hay que subir a ver qué mandaste) */
+@media (min-width: 1000px) {
+  .chat {
+    width: 100%;
+    max-width: 1240px;
+    grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    column-gap: 28px;
+    overflow: hidden;
+  }
+  .chat-expediente {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    justify-self: stretch;
+    max-width: none;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .chat-expediente .chat-tarjeta {
+    width: 100%;
+  }
+  .chat-expediente > .chat-quien {
+    text-align: left;
+  }
+  .chat-hilo {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .chat-pie {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+.chat-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.chat-par {
+  display: grid;
+  gap: 14px;
+}
+.chat-msg {
+  max-width: 88%;
+}
+.chat-tu {
+  justify-self: end;
+}
+.chat-ia {
+  justify-self: start;
+  padding: 14px 18px 16px;
+  border-radius: 4px 16px 16px 16px;
+  background: #fcfbf8;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.08);
+}
+.chat-quien {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--tinta-2);
+}
+.chat-tu > .chat-quien {
+  text-align: right;
+}
+.chat-marca {
+  margin-left: 6px;
+  color: var(--tinta);
+  background: rgba(24, 25, 25, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.25);
+}
+.chat-pregunta {
+  padding: 10px 16px;
+  border-radius: 16px 4px 16px 16px;
+  background: var(--tinta);
+  color: #fff;
+  font-size: 15px;
+}
+.chat-texto {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 62ch;
+}
+[data-escribiendo]::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: var(--lima);
+  box-shadow: 0 0 0 1px #a8ba0e;
+}
+
+/* la tarjeta del expediente: lo que «recibe» la IA */
+.chat-tarjeta {
+  display: grid;
+  gap: 6px;
+  width: min(560px, 100%);
+  padding: 16px 18px;
+  border-radius: 16px 4px 16px 16px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(24, 25, 25, 0.06), inset 0 0 0 1px rgba(24, 25, 25, 0.1);
+}
+.chat-tarjeta-nombre {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+.chat-tarjeta-meta,
+.chat-tarjeta-notas {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--tinta-2);
+}
+.chat-tarjeta-motivo {
+  margin: 2px 0 0;
+  font-size: 16px;
+}
+.chat-tarjeta-antecedentes,
+.chat-tarjeta-estudios {
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 13.5px;
+}
+.chat-tarjeta-antecedentes li {
+  padding: 3px 9px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.2);
+}
+.chat-tarjeta-estudios li {
+  display: grid;
+  gap: 4px;
+  width: 112px;
+}
+.chat-tarjeta-odonto {
+  margin-top: 4px;
+}
+.chat-tarjeta-odonto .odo-leyenda {
+  display: none;
+}
+
+/* los pasos de la lectura: un círculo que se llena al terminar */
+.chat-pasos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+  font-size: 15px;
+}
+.chat-paso {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+}
+.chat-paso-marca {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--tinta-2);
+  transform: translateY(1px);
+}
+.chat-paso[data-hecho] .chat-paso-marca {
+  background: var(--tinta);
+  box-shadow: none;
+}
+
+/* los hallazgos de la IA: sobre papel, el rojo clínico en trama (son sugerencias) */
+/* dentro del mensaje, renglones sobre línea fina: no una tarjeta dentro de otra */
+.chat-hallazgos {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+.chat-hallazgo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 12px 2px;
+  box-shadow: inset 0 1px 0 rgba(24, 25, 25, 0.1);
+}
+.chat-hallazgo:last-child {
+  box-shadow: inset 0 1px 0 rgba(24, 25, 25, 0.1), inset 0 -1px 0 rgba(24, 25, 25, 0.1);
+}
+.chat-hallazgo-pieza {
+  min-width: 2.4ch;
+  font-size: 1.9rem;
+  font-weight: 300;
+  line-height: 1;
+}
+.chat-hallazgo-pieza::before {
+  content: "";
+  display: block;
+  height: 3px;
+  margin-bottom: 7px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--clinico) 0 5px, transparent 5px 8px);
+}
+.chat-hallazgo-cuerpo {
+  display: grid;
+  gap: 4px;
+}
+.chat-hallazgo-texto {
+  font-size: 15.5px;
+}
+.chat-hallazgo-zona {
+  font-size: 13px;
+  color: var(--tinta-2);
+}
+.chat-nom {
+  margin: 14px 0 0;
+  font-size: 1.15rem;
+  font-weight: 300;
+}
+.chat-nom-fuente {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--tinta-2);
+}
+
+.chat-pie {
+  display: grid;
+  gap: 10px;
+}
+.chat-sugeridas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chat-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* en el teléfono: una columna que se recorre entera */
+/* sin min-height: 0, las filas crecen con su contenido y la hoja se recorre entera (si no, se enciman) */
+.pantalla[data-telefono] .arm-cuerpo {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto;
+}
+.pantalla[data-telefono] .arm-cuerpo,
+.pantalla[data-telefono] .arm-form,
+.pantalla[data-telefono] .arm-lado,
+.pantalla[data-telefono] .arm-chat,
+.pantalla[data-telefono] .chat,
+.pantalla[data-telefono] .chat-hilo {
+  min-height: auto;
+}
+.pantalla[data-telefono] .arm-odonto,
+.pantalla[data-telefono] .arm-estudios {
+  padding: 14px 10px;
+}
+.pantalla[data-telefono] .arm-form,
+.pantalla[data-telefono] .arm-lado,
+.pantalla[data-telefono] .chat-hilo {
+  overflow: visible;
+}
+.pantalla[data-telefono] .arm-bandeja {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.pantalla[data-telefono] .arm-pie {
+  position: sticky;
+  bottom: 0;
+  justify-content: space-between;
+  padding: 10px 0 4px;
+  background: linear-gradient(rgba(246, 246, 246, 0), var(--papel) 30%);
+}
+.pantalla[data-telefono] .chat-msg {
+  max-width: 100%;
+}
+.pantalla[data-telefono] .chat {
+  overflow: visible;
+}
+
+/* la entrada desde la lista de expedientes */
+.expedientes-acciones {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.exp-armar {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: var(--r-control);
+  background: var(--tinta);
+  color: #fff;
+  font-size: 14.5px;
+}
+.exp-armar:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}

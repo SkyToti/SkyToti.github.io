@@ -1,0 +1,113 @@
+/* 3 · «Cómo funciona». El diagrama (components/plano) no se toca: aquí solo se reparte su rejilla (plano, controles y
+   pasos) y se agranda la letra de los pasos. */
+.como {
+  --relleno: clamp(20px, 4vw, 72px);
+  border-top: 1px solid var(--color-linea);
+}
+.cabeza {
+  position: relative;
+  z-index: 1;
+  padding-inline: var(--relleno);
+}
+.titulo {
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  font-variation-settings: "wdth" 88;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+.intro {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+.rotulo {
+  font-family: var(--letra-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ambar);
+}
+.prosa {
+  margin-top: 0.75rem;
+  max-width: 36rem;
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+  line-height: 1.5;
+  color: var(--color-hueso);
+}
+.diagrama {
+  margin-top: 40px;
+  padding-inline: var(--relleno);
+}
+/* los pasos, en letra grande */
+.diagrama :global([data-escena]) > ol {
+  gap: 0.75rem;
+}
+.diagrama :global([data-escena]) > ol > li {
+  padding: 1rem 1.1rem;
+  gap: 1rem;
+}
+.diagrama :global([data-escena]) > ol > li > div {
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+.diagrama :global([data-escena]) > ol > li > button {
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 1024px) {
+  .como {
+    --relleno: max(52px, 4vw);
+    padding-block: 12svh;
+  }
+  .intro {
+    grid-template-columns: repeat(2, minmax(0, 34rem));
+    gap: 5vw;
+    margin-top: 3.5rem;
+  }
+  .diagrama {
+    margin-top: 7svh;
+  }
+  .diagrama :global([data-escena]) > ol {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+  .diagrama :global([data-escena]) > ol > li > div {
+    font-size: 1.1875rem;
+  }
+  /* sin capturas: el diagrama a 86vw, más ancho que todo lo demás (es la prueba principal) */
+  .estrella .diagrama :global([data-escena]) > :first-child {
+    width: 86vw;
+  }
+}
+
+/* diagrama bajo: más ancho que la columna de lectura, pasos debajo */
+@media (min-width: 1024px) {
+  .bajo .diagrama :global([data-escena]) > :first-child {
+    width: 84vw;
+  }
+}
+
+/* Pantalla ancha: el diagrama a 64vw a la izquierda y los pasos en una columna a su derecha. */
+@media (min-width: 1400px) {
+  .como:not(.estrella):not(.bajo) .diagrama :global([data-escena]) {
+    grid-template-columns: 64vw minmax(0, 1fr);
+    column-gap: 3.5vw;
+    align-items: start;
+  }
+  .como:not(.estrella):not(.bajo) .diagrama :global([data-escena]) > :first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .como:not(.estrella):not(.bajo) .diagrama :global([data-escena]) > [role="group"] {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .como:not(.estrella):not(.bajo) .diagrama :global([data-escena]) > ol {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    grid-template-columns: 1fr;
+    align-self: center;
+  }
+}

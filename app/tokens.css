@@ -1,0 +1,48 @@
+/*
+ * Tokens del sitio: dirección «Plano vivo» (DIRECCION.md §2 y §5). Todo lo demás usa estas variables;
+ * el motor de escenas (components/plano/) también, así que los NOMBRES no cambian.
+ * Las familias reales llegan por next/font (lib/fuentes.ts) como --fuente-texto y --fuente-mono en <html>.
+ */
+:root {
+  /* color (contraste contra noche medido en DIRECCION.md) */
+  --color-noche: #0b1220;
+  --color-superficie: #121b2e;
+  --color-linea: #2a3854; /* solo decorativo: nunca lleva texto encima */
+  --color-linea-viva: #5b6f96;
+  --color-hueso: #ede6d6;
+  --color-hueso-apagado: #a7a698;
+  --color-ambar: #f5b455; /* EL acento */
+  --color-alto: #f0776b; /* solo dentro de escenas */
+
+  /* letra */
+  --letra-texto: var(--fuente-texto, system-ui), system-ui, sans-serif;
+  --letra-mono: var(--fuente-mono, ui-monospace), ui-monospace, monospace;
+
+  /* tiempo y curvas */
+  --dur-micro: 0.18s;
+  --dur-ui: 0.4s;
+  --dur-entrada: 0.9s;
+  --dur-trazo: 1.2s;
+  --curva-entrada: cubic-bezier(0.16, 1, 0.3, 1); /* expo.out */
+  --curva-trazo: cubic-bezier(0.45, 0, 0.55, 1); /* power2.inOut */
+}
+
+/* Conexión con Tailwind 4: `inline` hace que las utilidades usen var(--…) de arriba (bg-noche, text-hueso,
+   border-linea, font-mono, ease-entrada…).
+   OJO: como los colores se llaman igual que en Tailwind (--color-*), Tailwind también emite
+   `--color-noche: var(--color-noche)` dentro de `@layer theme`. No hay ciclo porque el :root de arriba va SIN
+   capa y le gana a cualquier capa: no metas este archivo ni ese :root en un @layer. */
+@theme inline {
+  --color-noche: var(--color-noche);
+  --color-superficie: var(--color-superficie);
+  --color-linea: var(--color-linea);
+  --color-linea-viva: var(--color-linea-viva);
+  --color-hueso: var(--color-hueso);
+  --color-hueso-apagado: var(--color-hueso-apagado);
+  --color-ambar: var(--color-ambar);
+  --color-alto: var(--color-alto);
+  --font-texto: var(--letra-texto);
+  --font-mono: var(--letra-mono);
+  --ease-entrada: var(--curva-entrada);
+  --ease-trazo: var(--curva-trazo);
+}

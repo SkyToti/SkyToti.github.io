@@ -1,0 +1,242 @@
+/* 1 · Cabecera del caso. Celular y tableta: apilado (volver, título, resumen, ficha, botones, invento a todo el ancho).
+   Escritorio: una pantalla; el texto a la izquierda (≤ 46vw) y el invento a ~56vw saliéndose por la derecha. */
+.cabecera {
+  --ancho-invento: 56vw;
+  --sale-invento: 7vw;
+  --arriba-invento: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-top: 28px;
+}
+.numero {
+  top: 8px;
+  font-size: min(44vw, 15rem);
+}
+.texto {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  padding-inline: var(--relleno);
+}
+.volver {
+  margin-bottom: 3.5rem;
+}
+.volver a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.aviso {
+  margin: -2rem 0 2rem;
+  max-width: 48ch;
+  font-size: 0.9375rem;
+  color: var(--color-hueso-apagado);
+}
+.titulo {
+  max-width: 13ch;
+  font-size: clamp(2.75rem, 7.4vw, 8.25rem);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+  font-variation-settings: "wdth" 86;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+.largo {
+  font-size: clamp(2.5rem, 5.6vw, 6.5rem);
+  max-width: 16ch;
+}
+.resumen {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  font-size: clamp(1.1875rem, 1.6vw, 1.5rem);
+  line-height: 1.35;
+  color: var(--color-hueso);
+}
+.ficha {
+  margin-top: 2.25rem;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 1.25rem 2.5rem;
+  max-width: 40rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-linea);
+}
+.dato dd {
+  margin-top: 0.35rem;
+  color: var(--color-hueso);
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+.papel {
+  grid-column: 1 / -1;
+}
+.tipo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+.privado {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--color-linea-viva);
+  border-radius: 999px;
+  color: var(--color-hueso-apagado);
+}
+.botones {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.grande {
+  min-height: 56px;
+  padding-inline: 1.375rem;
+  font-size: 1.0625rem;
+}
+/* sin foto pegada en el invento: fuera su hueco con cinta */
+.invento :global([data-g="foto"]),
+.invento :global([data-g="sombra-foto"]),
+.invento :global([data-g="foto-sombra"]) {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .ficha {
+    grid-template-columns: auto 1fr;
+  }
+  /* el número, arriba a la derecha, detrás del título (no del enlace de volver) */
+  .numero {
+    top: 76px;
+    left: auto;
+    right: var(--relleno);
+    font-size: min(36vw, 13rem);
+  }
+  /* el lienzo del invento deja aire arriba: se sube un poco */
+  .invento {
+    margin-inline: 0;
+    margin-right: -6vw;
+    margin-top: -10vw;
+  }
+}
+
+@media (min-width: 1024px) {
+  section.cabecera {
+    --relleno: max(52px, 4vw);
+    display: block;
+    min-height: calc(100svh - 56px);
+    padding-block: 2svh 8svh;
+  }
+  /* el número, gigante, arriba a la derecha: detrás del invento, lejos del resumen */
+  .numero {
+    top: 3svh;
+    left: auto;
+    right: 2vw;
+    font-size: min(34vw, 58svh);
+  }
+  .texto {
+    width: 50vw;
+  }
+  .volver {
+    margin-bottom: 9svh;
+  }
+  .invento {
+    translate: 0 -50%;
+  }
+}
+@media (min-width: 1500px) {
+  .texto {
+    width: 46vw;
+  }
+}
+
+/* ── Casos sin capturas: el invento vivo del inicio ─────────────────────────────────────────────────────────── */
+/* minecraft-rcon-mcp: las dos cifras gigantes y la bóveda que se gira */
+.cifras {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0 var(--relleno);
+  padding: 0;
+  list-style: none;
+}
+.cifra {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1.5px solid var(--color-linea-viva);
+}
+.valor {
+  font-family: var(--letra-mono);
+  font-size: clamp(2.75rem, 13vw, 9.5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ambar);
+}
+.etiqueta {
+  max-width: 24ch;
+  color: var(--color-hueso-apagado);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+/* taller-claude: la mesa de los seis, una ventana que recorta el dibujo de orilla a orilla */
+.mesa {
+  position: relative;
+  margin: 0 var(--relleno);
+  overflow: clip;
+}
+.mesaLienzo {
+  margin-top: -22%;
+}
+@media (min-width: 1024px) {
+  .conBoveda {
+    --ancho-invento: min(50vw, 98svh);
+    --sale-invento: 6vw;
+    --arriba-invento: 64%;
+  }
+  .conBoveda .numero {
+    right: auto;
+    left: 44vw;
+  }
+  /* las cifras arriba a la derecha, sobre la bóveda */
+  .conBoveda .cifras {
+    position: absolute;
+    top: 9svh;
+    right: var(--relleno);
+    width: min(44vw, 46rem);
+    margin: 0;
+  }
+  .conBoveda .valor {
+    font-size: min(5.6vw, 12svh);
+  }
+  /* la mesa cruza toda la base de la ventana; el texto queda encima, a la izquierda */
+  /* la cabecera crece hacia abajo: el texto arriba, la mesa debajo (nunca encima del texto) */
+  section.conMesa {
+    padding-bottom: calc(46svh + 24px);
+  }
+  .conMesa .numero {
+    top: 3svh;
+  }
+  .conMesa .mesa {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 46svh;
+    margin: 0;
+    pointer-events: none;
+  }
+  .conMesa .mesaLienzo {
+    position: absolute;
+    left: -6vw;
+    bottom: -4svh;
+    width: 112vw;
+    margin: 0;
+    pointer-events: auto;
+  }
+}

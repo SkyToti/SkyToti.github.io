@@ -1,0 +1,133 @@
+/* 2 · La prueba principal. Celular y tableta: apilado dentro del relleno. Escritorio: según `data-forma`. */
+.principal {
+  --relleno: clamp(20px, 4vw, 72px);
+  position: relative;
+  overflow: clip;
+  padding-block: 24px 64px;
+}
+.escena {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding-inline: var(--relleno);
+}
+.texto {
+  display: grid;
+  gap: 2rem;
+  margin-top: 48px;
+  padding-inline: var(--relleno);
+}
+.rotulo {
+  font-family: var(--letra-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ambar);
+}
+.prosa {
+  margin-top: 0.75rem;
+  max-width: 40ch;
+  font-size: clamp(1.125rem, 1.35vw, 1.3125rem);
+  line-height: 1.5;
+  color: var(--color-hueso);
+}
+
+@media (min-width: 1024px) {
+  .principal {
+    --relleno: max(52px, 4vw);
+    padding-block: 4svh 12svh;
+  }
+  .escena {
+    display: block;
+    padding: 0;
+  }
+  .acompana {
+    position: absolute;
+  }
+
+  /* horizontal: la captura a 68vw pegada a la orilla izquierda; el celular tapa su esquina inferior derecha; el
+     texto, en la columna que queda a la derecha */
+  .principal[data-forma="horizontal"] {
+    display: grid;
+    grid-template-columns: 68vw 1fr;
+    align-items: start;
+  }
+  .principal[data-forma="horizontal"] .acompana {
+    z-index: 2;
+    left: calc(68vw - var(--ancho-figura) - 3vw);
+    bottom: -9svh;
+  }
+  .principal[data-forma="horizontal"] .acompana p {
+    display: none;
+  }
+  .principal[data-forma="horizontal"] .medio p {
+    margin-left: max(52px, 4vw);
+  }
+  .principal[data-forma="horizontal"] .texto {
+    margin: 2svh 0 0;
+    padding-inline: 3vw var(--relleno);
+  }
+
+  /* …y al revés en los casos impares: la captura a la derecha, el celular en su esquina de abajo a la izquierda */
+  .principal[data-forma="horizontal"][data-lado="der"] {
+    grid-template-columns: 1fr 68vw;
+  }
+  .principal[data-forma="horizontal"][data-lado="der"] .escena {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .principal[data-forma="horizontal"][data-lado="der"] .texto {
+    grid-column: 1;
+    grid-row: 1;
+    padding-inline: var(--relleno) 3vw;
+  }
+  .principal[data-forma="horizontal"][data-lado="der"] .acompana {
+    left: 3vw;
+  }
+  .principal[data-forma="horizontal"][data-lado="der"] .medio p {
+    margin-left: 0;
+    margin-right: max(52px, 4vw);
+  }
+  /* vertical: el teléfono a 80svh; el segundo asoma detrás, girado, más abajo; el texto a la derecha */
+  .principal[data-forma="vertical"] {
+    display: grid;
+    grid-template-columns: 60vw 1fr;
+    align-items: center;
+    min-height: 100svh;
+  }
+  .principal[data-forma="vertical"] .medio {
+    z-index: 2;
+    margin-left: 12vw;
+  }
+  .principal[data-forma="vertical"] .acompana {
+    z-index: 1;
+    top: 9svh;
+    left: 30vw;
+  }
+  .principal[data-forma="vertical"] .texto {
+    margin: 0;
+    padding-inline: 2vw var(--relleno);
+  }
+
+  /* cuadrado: el video a 84svh de alto desde la orilla y el vertical del mismo alto pegado a su lado, apenas girado
+     (los dos juntos son la prueba); el texto abajo, en dos columnas grandes */
+  .principal[data-forma="cuadrado"] .escena {
+    min-height: 98svh;
+  }
+  .principal[data-forma="cuadrado"] .medio {
+    margin-left: max(52px, 4vw);
+  }
+  .principal[data-forma="cuadrado"] .acompana {
+    top: 1svh;
+    left: calc(max(52px, 4vw) + 84svh + 2vw);
+  }
+  .principal[data-forma="cuadrado"] .texto {
+    grid-template-columns: repeat(2, minmax(0, 34rem));
+    gap: 4vw;
+    margin-top: 8svh;
+  }
+  .principal[data-forma="cuadrado"] .prosa {
+    max-width: 34rem;
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "portafolio-dibujo",
+  "private": true,
+  "type": "module",
+  "description": "Laboratorio de ilustración a mano (roughjs) para el portafolio",
+  "scripts": {
+    "generar": "node generar.mjs",
+    "capturar": "node capturar.mjs",
+    "probar": "node probar.mjs"
+  },
+  "dependencies": {
+    "roughjs": "^4.6.6"
+  }
+}

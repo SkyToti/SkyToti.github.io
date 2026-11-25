@@ -1,0 +1,68 @@
+/* El pie a todo lo ancho: Haku dormido a la izquierda, grande y entero; la firma, el correo y «volver arriba» a la derecha.
+   En escritorio el centro del pie queda libre (por ahí pasa la línea hacia su final, en la chispa del dibujo). */
+.pie {
+  --relleno: clamp(20px, 4vw, 72px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(40px, 7svh, 72px) var(--relleno) clamp(28px, 5svh, 48px);
+  border-top: 1px solid var(--color-linea);
+}
+.haku {
+  position: relative;
+  width: min(100%, 420px);
+}
+/* en las páginas de caso (sin línea viva ni estación): Haku más chico, entero */
+.pie:not(:global([data-estacion="pie"]) *) .haku {
+  width: min(62%, 260px);
+}
+/* el final de la línea: solo en escritorio (en celular termina en el ancla del pie, abajo a la izquierda) */
+.fin[data-ancla] {
+  display: none;
+}
+.datos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .pie {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    padding-left: 6vw;
+  }
+  .haku {
+    width: min(34vw, 560px);
+  }
+  .pie:not(:global([data-estacion="pie"]) *) .haku {
+    width: min(22vw, 300px);
+  }
+  /* el dibujo entero (Haku y su chispa): la línea viva termina justo en la chispa dibujada (83.8 %, 84.5 % del lienzo) */
+  .fin[data-ancla] {
+    display: block;
+    left: 83.8%;
+    top: 84.5%;
+    --forma: fin;
+  }
+  .datos {
+    width: 34vw;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .enlaces {
+    justify-content: flex-end;
+  }
+}
+/* Un solo Haku: mientras el guía anda, las «z» se esconden con el Haku del pie (y suben cuando el guía se duerme aquí) */
+:global(html[data-haku-guia-vivo]) .dibujo:not([data-haku-estado="dentro"]) :global([data-g^="z"]) {
+  opacity: 0 !important;
+}

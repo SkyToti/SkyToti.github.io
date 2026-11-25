@@ -1,0 +1,272 @@
+/* Escenario 8 · Tierra de Viajes. Celular y tableta: apilado (texto, portada con pin, teléfono delante de la vista de
+   escritorio, maleta saliéndose a la derecha). Escritorio: rejilla de dos columnas: la portada (55vw) arriba a la
+   izquierda con el «08» asomando por detrás y el texto debajo; a la derecha el teléfono y la vista de escritorio del
+   itinerario; la maleta en la esquina de abajo a la derecha; la ruta del avión por encima de todo. */
+.escena {
+  --ancho-escritorio: 100%;
+  --ancho-maleta: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.escena .numero {
+  top: clamp(8px, 2svh, 24px);
+  left: auto;
+  right: var(--relleno);
+}
+
+/* ── texto ── */
+.texto {
+  position: relative;
+  z-index: 2;
+  padding-inline: var(--relleno);
+  max-width: calc(34rem + 2 * var(--relleno));
+}
+.titulo {
+  font-size: clamp(2rem, 4.2vw, 4rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 90;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+.resumen {
+  margin-top: 1rem;
+  color: var(--color-hueso-apagado);
+  font-size: 1.125rem;
+}
+.pildoras {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.enlaces {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ── la portada y su pin ── */
+.portada {
+  position: relative;
+  z-index: 1;
+}
+.pin {
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--relleno) + 30%);
+  top: 14%;
+  width: clamp(52px, 5.6vw, 88px);
+  cursor: pointer;
+}
+.pinSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.pinSuelo {
+  fill: none;
+  stroke: var(--color-linea-viva);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+}
+.pinRelleno {
+  fill: var(--color-ambar);
+}
+.pinContorno {
+  fill: none;
+  stroke: var(--color-hueso);
+  stroke-width: 3.25;
+  stroke-linejoin: round;
+}
+.pinOjo {
+  fill: var(--color-noche);
+  stroke: var(--color-hueso);
+  stroke-width: 2.25;
+}
+
+/* ── el itinerario: teléfono delante, vista de escritorio detrás ── */
+.itinerario {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  margin-inline: var(--relleno);
+}
+.itinerario > * {
+  --relleno: 0px;
+  grid-area: 1 / 1;
+}
+.itinerario .escritorio {
+  justify-self: end;
+  width: 78%;
+  margin: 0;
+}
+.telefono {
+  position: relative;
+  z-index: 1;
+  justify-self: start;
+  width: 42%;
+  max-width: 240px;
+  margin-top: 16%;
+}
+
+/* ── la maleta (recortada del lienzo del invento: x 30–212, y 238–408) ── */
+.escena .maleta {
+  z-index: 3;
+  align-self: flex-end;
+  width: min(56%, 280px);
+  margin: -28% calc(-1 * var(--relleno)) 0 0;
+}
+.recorteMaleta {
+  position: relative;
+  aspect-ratio: 182 / 170;
+  overflow: clip;
+}
+.lienzoMaleta {
+  position: absolute;
+  left: calc(-30 / 182 * 100%);
+  top: calc(-238 / 170 * 100%);
+  width: calc(640 / 182 * 100%);
+}
+/* del recorte, solo la maleta: nada de la ruta del invento, del avión, de la foto ni de los rótulos */
+.recorteMaleta :global([data-g="avion"]),
+.recorteMaleta :global([data-g^="ruta"]),
+.recorteMaleta :global([data-g="pin"]),
+.recorteMaleta :global([data-g="foto"]),
+.recorteMaleta :global([data-g="foto-sombra"]),
+.recorteMaleta :global([data-g^="rotulos"]) {
+  display: none;
+}
+/* sin el recuadro de espera (el marcador sin foto del invento perezoso) */
+.recorteMaleta :global([data-invento-perezoso]) > span {
+  display: none;
+}
+
+/* ── la ruta del avión: por encima de todo, sin puntero (salvo el avión) ── */
+.ruta {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+.rutaSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.rutaTrazo {
+  fill: none;
+  stroke: var(--color-hueso-apagado);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-dasharray: 9 9;
+}
+.avion {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(60px, 6vw, 96px);
+  padding: 6px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  visibility: hidden;
+}
+.ruta[data-lista] .avion {
+  visibility: visible;
+}
+.avion:focus-visible {
+  outline: 2px solid var(--color-ambar);
+  outline-offset: 2px;
+}
+.rizo,
+.espejo {
+  display: block;
+}
+.espejo {
+  transform: scaleX(-1);
+}
+
+/* ── Escritorio ────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .escena {
+    --orilla: max(72px, 5vw);
+    --ancho-portada: 55vw;
+    --ancho-escritorio: 34vw;
+    --ancho-maleta: 22vw;
+    --sale-maleta: 3vw;
+    --baja-maleta: -2.5vw;
+    display: grid;
+    grid-template-columns: calc(var(--orilla) + var(--ancho-portada)) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: start;
+    gap: 0;
+  }
+  /* el «08» asoma por detrás de la orilla de arriba de la portada; la ruta da su rizo encima */
+  .escena .numero {
+    top: clamp(20px, 4svh, 48px);
+    left: var(--orilla);
+    right: auto;
+  }
+  .portada {
+    grid-column: 1;
+    grid-row: 1;
+    width: var(--ancho-portada);
+    margin: clamp(120px, 17svh, 190px) 0 0 var(--orilla);
+  }
+  .pin {
+    left: 30%;
+    top: 12%;
+  }
+  .texto {
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    gap: 3vw;
+    width: var(--ancho-portada);
+    max-width: none;
+    margin: clamp(28px, 4.5svh, 52px) 0 0 var(--orilla);
+    padding: 0;
+  }
+  .titulo {
+    font-size: clamp(2.25rem, 3.6vw, 4rem);
+  }
+  .resumen {
+    margin-top: 0.25rem;
+  }
+  .itinerario {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: block;
+    align-self: stretch;
+    margin: 0;
+  }
+  .itinerario .escritorio {
+    position: absolute;
+    top: clamp(36px, 6svh, 72px);
+    right: -5vw;
+    width: var(--ancho-escritorio);
+  }
+  .telefono {
+    position: absolute;
+    top: clamp(150px, 23svh, 250px);
+    left: 4.5vw;
+    width: min(17vw, 31svh);
+    max-width: none;
+    margin: 0;
+  }
+  .escena .maleta {
+    width: var(--ancho-maleta);
+    margin: 0;
+  }
+}

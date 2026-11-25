@@ -1,0 +1,104 @@
+/* Escenario 3 · yacontesto.com. Celular y tableta: apilado (texto, video, folioscopio). Escritorio: una pantalla de
+   100svh con el video a 70vw centrado como pantalla de cine y el texto debajo, a lo ancho del video. */
+.escena {
+  --cine: min(70vw, calc((100svh - 330px) * 1.7778));
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.escena .numero {
+  left: auto;
+  right: var(--relleno);
+}
+.pie {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-inline: var(--relleno);
+}
+.texto {
+  max-width: 34rem;
+}
+.titulo {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 90;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+.resumen {
+  margin-top: 0.75rem;
+  color: var(--color-hueso-apagado);
+  font-size: 1.125rem;
+}
+.pildoras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.botones {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+/* El folioscopio va sin foto (la prueba es el video grande): fuera su hueco con cinta. */
+.folioscopio :global([data-g="foto"]),
+.folioscopio :global([data-g="sombra-foto"]),
+.folioscopio :global([data-g="foto-sombra"]) {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  section.escena {
+    --relleno: max(52px, 4vw);
+    --ancho-folio: min(40vw, 72svh);
+    --sale-folio: 4vw;
+    display: block;
+    height: 100svh;
+    min-height: 600px;
+    padding: 0;
+  }
+  /* «03» enorme: sale por la esquina de arriba a la derecha, detrás del video (se ve en la orilla y sobre el video) */
+  .escena .numero {
+    top: 9svh;
+    right: -4vw;
+    font-size: min(34vw, 62svh);
+  }
+  .cine {
+    position: absolute;
+    z-index: 1;
+    top: 14svh;
+    left: calc(50% - var(--cine) / 2);
+  }
+  /* el texto, debajo del video, a la derecha del folioscopio y hasta la orilla derecha del video */
+  .pie {
+    position: absolute;
+    z-index: 2;
+    top: calc(14svh + var(--cine) * 0.5625 + clamp(16px, 3svh, 32px));
+    left: max(calc(50% - var(--cine) / 2), calc(var(--ancho-folio) * 0.62 - var(--sale-folio) + 24px));
+    right: calc(50% - var(--cine) / 2);
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 2.5vw;
+  }
+  .titulo {
+    font-size: clamp(2rem, 3.2vw, 3rem);
+  }
+  .resumen {
+    font-size: 1.0625rem;
+  }
+  .acciones {
+    padding-top: 0.5rem;
+  }
+  /* encima de la esquina del video (la de abajo a la izquierda: el botón de pausa del video queda a la derecha) */
+  .folioscopio {
+    z-index: 3;
+  }
+}

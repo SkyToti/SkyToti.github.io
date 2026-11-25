@@ -1,0 +1,65 @@
+@font-face {
+  font-family: 'Shantell Sans';
+  src: url(vendor/shantell-sans-latin.woff2) format('woff2');
+  font-weight: 300 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url(vendor/bricolage-grotesque-latin.woff2) format('woff2');
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+}
+
+:root {
+  --noche: #0B1220; --superficie: #121B2E; --linea: #2A3854; --linea-viva: #5B6F96;
+  --hueso: #EDE6D6; --hueso-apagado: #A7A698; --ambar: #F5B455; --cielo: #86C8F0;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--noche); color: var(--hueso); }
+body { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.6; }
+
+.lab-nav { position: fixed; top: 0.75rem; right: 1rem; display: flex; gap: 0.25rem; z-index: 2;
+  font: 12px/1 ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+.lab-nav a { color: var(--hueso-apagado); text-decoration: none; padding: 0.4rem 0.5rem; border-radius: 6px; }
+.lab-nav a:hover, .lab-nav a:focus-visible { color: var(--hueso); background: var(--superficie); }
+
+.portada {
+  min-height: 100vh; max-width: 1440px; margin: 0 auto;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.22fr); align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem); padding: 4rem clamp(1.25rem, 4.5vw, 4rem);
+}
+h1 { margin: 0; font-size: clamp(2.75rem, 8vw, 7rem); font-weight: 700; font-stretch: 90%;
+  line-height: 0.95; letter-spacing: -0.02em; }
+.rol { margin: 1.25rem 0 0; color: var(--hueso-apagado); font-size: 1.15rem; }
+.frase { margin: 0.75rem 0 0; max-width: 34ch; }
+.botones { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 1.75rem; }
+.boton { display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.1rem; border-radius: 6px;
+  border: 1.5px solid var(--linea-viva); color: var(--hueso); text-decoration: none; font-weight: 600; }
+.boton.principal { background: var(--ambar); border-color: var(--ambar); color: var(--noche); }
+.boton:focus-visible, .otra-vez:focus-visible, .interruptor:focus-visible { outline: 2px solid var(--ambar); outline-offset: 3px; }
+
+.lamina { margin: 0; position: relative; }
+.lamina svg { display: block; width: 100%; height: auto; overflow: visible; }
+.lamina.vertical { display: none; }
+.otra-vez { position: absolute; right: 0; bottom: -2.25rem; background: none; border: 0; cursor: pointer;
+  color: var(--hueso-apagado); font: 12px/1 ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.5rem; }
+.otra-vez:hover { color: var(--hueso); }
+
+/* línea que hierve: tres cuadros, se ve uno */
+.escena[data-f="1"] .f1, .escena[data-f="2"] .f2 { display: inline; }
+.escena[data-f="1"] .f0, .escena[data-f="2"] .f0 { display: none; }
+.escena text { font-family: 'Shantell Sans', 'Caveat', cursive; }
+.escena .guia { fill: none; stroke: none; }
+.escena .estela { fill: none; }
+.escena .interruptor { cursor: pointer; outline: none; }
+.escena .golpe-gato { pointer-events: all; }
+
+@media (max-width: 760px) {
+  .portada { grid-template-columns: minmax(0, 1fr); padding-top: 4.5rem; align-items: start; }
+  .lamina.horizontal { display: none; }
+  .lamina.vertical { display: block; max-width: 350px; width: 100%; margin: -1rem auto 3rem; }
+  .lab-nav { position: static; flex-wrap: wrap; padding: 0.5rem 1rem 0; }
+  .portada { padding-top: 1.5rem; min-height: 0; }
+}

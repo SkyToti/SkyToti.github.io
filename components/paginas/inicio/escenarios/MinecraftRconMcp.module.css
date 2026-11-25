@@ -1,0 +1,196 @@
+/* Escenario 4 · minecraft-rcon-mcp. Celular y tableta: apilado dentro del relleno (texto, cifras, bóveda, diagrama).
+   Escritorio: rejilla de dos columnas: el texto arriba a la izquierda y el diagrama debajo; las cifras arriba a la
+   derecha; la bóveda en capa, centro-derecha, a ~80svh de alto, saliéndose por abajo y por la derecha. */
+.escena {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.numero {
+  top: clamp(8px, 2svh, 24px);
+  left: auto;
+  right: var(--relleno);
+}
+.titulo {
+  font-size: clamp(2rem, 4.4vw, 4.25rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 90;
+  overflow-wrap: anywhere;
+  color: var(--color-hueso);
+}
+.resumen {
+  margin-top: 1rem;
+  color: var(--color-hueso-apagado);
+  font-size: 1.125rem;
+}
+.pildoras {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.boton {
+  margin-top: 1.75rem;
+}
+
+/* Las dos cifras del caso, enormes, en mono. */
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0 var(--relleno);
+  padding: 0;
+  list-style: none;
+}
+.cifra {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1.5px solid var(--color-linea-viva);
+}
+.valor {
+  font-family: var(--letra-mono);
+  font-size: clamp(2.75rem, 13vw, 9.5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ambar);
+}
+.etiqueta {
+  max-width: 22ch;
+  color: var(--color-hueso-apagado);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+
+/* La bóveda: el lienzo del invento con la perilla del volante encima. */
+.lienzo {
+  position: relative;
+}
+/* en celular y tableta, sin el cielo vacío de arriba del lienzo (donde iba la foto) */
+@media (max-width: 1023.98px) {
+  .boveda {
+    overflow: clip;
+  }
+  .lienzo {
+    margin-top: -17%;
+  }
+}
+/* sin la foto con cinta (no hay captura: el invento es la estrella), ni el muro de la bóveda: el diagrama tapa su
+   mitad de arriba y lo que asomaba (su orilla izquierda, un trozo de la de arriba) se leía como trazos sueltos */
+.lienzo :global([data-g="foto"]),
+.lienzo :global([data-g="sombra-foto"]),
+.lienzo :global([data-g="muro"]) {
+  display: none;
+}
+/* la máquina de folios y su folio no se trazan a la vista (a medio trazar, el poste y las orillas quedaban como una «T»
+   y rayitas sueltas): aparecen enteros cuando su trazo ya terminó (paso 5 de la entrada, ~2.4 s tras despertar) */
+:global(html.mueve) .lienzo :global([data-g="maquina"]),
+:global(html.mueve) .lienzo :global([data-g="maq-sombra"]),
+:global(html.mueve) .lienzo :global([data-g="folio"]) {
+  opacity: 0;
+}
+:global(html.mueve) .lienzo :global([data-desperto] [data-g="maquina"]),
+:global(html.mueve) .lienzo :global([data-desperto] [data-g="maq-sombra"]),
+:global(html.mueve) .lienzo :global([data-desperto] [data-g="folio"]) {
+  animation: maquina-entera 0.24s steps(3, end) 2.5s both;
+}
+:global(html.mueve) .lienzo :global([data-entro] [data-g="maquina"]),
+:global(html.mueve) .lienzo :global([data-entro] [data-g="maq-sombra"]),
+:global(html.mueve) .lienzo :global([data-entro] [data-g="folio"]) {
+  animation: none;
+  opacity: 1;
+}
+@keyframes maquina-entera {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.volante {
+  position: absolute;
+  z-index: 2;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+}
+.volante:active {
+  cursor: grabbing;
+}
+.volante:focus-visible {
+  outline: 2px solid var(--color-ambar);
+  outline-offset: 6px;
+}
+
+/* El diagrama en miniatura, como prueba. */
+.diagrama {
+  margin: 0 var(--relleno);
+}
+.rotulo {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--color-hueso-apagado);
+}
+
+@media (min-width: 1024px) {
+  .escena {
+    --ancho-boveda: min(122svh, 88vw);
+    --sale-der: calc(var(--ancho-boveda) * 0.06);
+    --sale-abajo: calc(var(--ancho-boveda) * -0.12);
+    display: grid;
+    grid-template-columns: minmax(0, calc(28rem + 2 * var(--relleno))) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    gap: 0;
+  }
+  .numero {
+    top: clamp(16px, 3svh, 40px);
+    left: var(--relleno);
+    right: auto;
+  }
+  .texto {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+    padding-top: clamp(56px, 9svh, 120px);
+  }
+  .titulo {
+    font-size: clamp(2rem, 3.9vw, 4rem);
+  }
+  /* columna izquierda: el texto y, debajo, las dos cifras ENORMES una sobre otra */
+  .cifras {
+    grid-column: 1;
+    grid-row: 2;
+    z-index: 1;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(16px, 3svh, 32px);
+    margin: clamp(28px, 4.5svh, 48px) var(--relleno) 0;
+  }
+  .valor {
+    font-size: clamp(3.5rem, 8.4vw, 9.5rem);
+  }
+  /* el diagrama (composición vertical, crecida a 36vw) arriba a la DERECHA, encima de la bóveda: llena la esquina
+     que quedaba vacía y la bóveda asoma debajo de él */
+  .diagrama {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    justify-self: end;
+    z-index: 1;
+    width: 36vw;
+    margin: clamp(24px, 4svh, 56px) var(--relleno) 0 0;
+    padding: 14px 16px 10px;
+    border: 1px solid var(--color-linea);
+    border-radius: 10px;
+    background: var(--color-noche);
+  }
+  .diagrama :global(svg[data-composicion="alto"]) {
+    max-width: none;
+  }
+}

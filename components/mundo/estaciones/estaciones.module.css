@@ -1,0 +1,130 @@
+/* Estaciones de cierre: repisa, buzón, pie, sello y monograma. Paleta del kit (noche, hueso, ámbar). */
+
+/* ── La repisa: la ancha (900×360) o la vertical (360×520) según el ancho del contenedor ── */
+.repisa {
+  container-type: inline-size;
+}
+.comp {
+  position: relative;
+}
+.compH {
+  --u: 1cqw;
+}
+.compV {
+  --u: min(1cqw, 4.2px);
+  display: none;
+  max-width: 420px;
+  margin-inline: auto;
+}
+@container (max-width: 600px) {
+  .compH {
+    display: none;
+  }
+  .compV {
+    display: block;
+  }
+}
+
+/* el lienzo recorta a Haku mientras sube saltando desde abajo */
+.lienzo {
+  overflow: clip;
+}
+
+.objeto {
+  position: absolute;
+  z-index: 1;
+}
+.boton {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.boton svg {
+  width: 100%;
+  height: 100%;
+}
+.boton:focus {
+  outline: none;
+}
+.boton:focus-visible {
+  outline: 2px dashed #f5b455;
+  outline-offset: 3px;
+}
+
+/* el globo con el dato: HTML de verdad, encima del objeto elegido */
+.globo {
+  position: absolute;
+  z-index: 2;
+  width: max-content;
+  max-width: min(19rem, 86%);
+  padding: 0.7rem 0.9rem 0.8rem;
+  border: 2px solid #ede6d6;
+  border-radius: 14px 16px 15px 13px;
+  background: #121b2e;
+  box-shadow: 5px 4px 0 #2a3854;
+  color: #ede6d6;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.globo:empty {
+  display: none;
+}
+.globo strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #f5b455;
+  font: 760 1.0625rem/1.2 "Shantell Sans", "Comic Sans MS", cursive;
+  font-variation-settings: "INFM" 100, "BNCE" 55;
+}
+.globo::after {
+  content: "";
+  position: absolute;
+  left: clamp(16px, calc(50% + var(--d, 0) * var(--u, 1cqw)), calc(100% - 16px));
+  bottom: -9px;
+  width: 14px;
+  height: 14px;
+  border-right: 2px solid #ede6d6;
+  border-bottom: 2px solid #ede6d6;
+  background: #121b2e;
+  transform: translateX(-50%) rotate(45deg);
+}
+:global(html.mueve) .globo {
+  animation: globoSale 0.22s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+@keyframes globoSale {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px) scale(0.92);
+  }
+}
+
+/* ── El buzón: la estampa «copiado» baja encima ── */
+.buzon {
+  position: relative;
+}
+.estampa {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── El monograma: el enlace al inicio ── */
+.monograma {
+  display: inline-block;
+  width: 64px;
+  line-height: 0;
+  border-radius: 6px;
+}
+.monograma:focus-visible {
+  outline: 2px solid #f5b455;
+  outline-offset: 4px;
+}

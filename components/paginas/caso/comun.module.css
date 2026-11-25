@@ -1,0 +1,40 @@
+/* FiguraMedio: una <Vista> con su pie visible. En < 1024 px ocupa su caja (dentro del relleno del escenario);
+   en escritorio mide `--ancho-figura`. La Vista va a 100 % de la figura (su propio relleno se anula aquí). */
+.figura {
+  --relleno: 0px;
+  position: relative;
+  width: 100%;
+}
+.telefono {
+  /* en celular, el teléfono no pasa de 72svh de alto: se centra */
+  width: min(100%, var(--ancho-tel-chico, 100%));
+  margin-inline: auto;
+}
+@media (min-width: 1024px) {
+  .figura,
+  .telefono {
+    width: var(--ancho-figura);
+    margin-inline: 0;
+  }
+}
+.pie {
+  margin-top: 0.75rem;
+  max-width: 46ch;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--color-hueso-apagado);
+}
+@media (min-width: 1024px) {
+  .pie {
+    font-size: 1rem;
+  }
+}
+/* sin JavaScript: el póster del video encima de su lámina vacía */
+.poster {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}

@@ -1,0 +1,35 @@
+ok  1440 la pausa congela la caminata de la hoja (4 = 4)
+ok  1440 caminando en 12 de 12 cuadros grabados
+ok  1440 avanza a la derecha al bajar; pasos (px): 13.3 13.3 6.7 13.3 13.4 6.6 13.4 13.3 6.7 13.3 13.3
+ok  1440 no brinca de altura (abajo: 898)
+ok  1440 el ciclo avanza: 351240135024
+    1440 pista: caminar3@178.1 caminar5@191.4 caminar1@204.7 caminar2@211.4 caminar4@224.7 caminar0@238.1 caminar1@244.7 caminar3@258.1 caminar5@271.4 caminar0@278.1 caminar2@291.4 caminar4@304.7
+ok  1440 al detenerse presenta con globo: «frase de prueba 1 (dos)» (senalar1)
+ok  1440 el globo cabe en la ventana
+ok  1440 el clic trae otra frase: «frase de repuesto A»
+ok  1440 Escape cierra el globo
+ok  1440 se asusta con el cursor rápido (susto1)
+ok  1440 en el pie se duerme (dormir0)
+ok  1440 en silencio: sentado en la esquina (x 158.1) y sin globo al tocarlo
+ok  1440 el silencio se recuerda (localStorage)
+ok  1440 errores de consola: 0
+ok  1440 menos movimiento: quieto en su esquina (x 158.1 → 158.1, sentado)
+ok  1440 menos movimiento: globo sin animación (none)
+ok  1440 menos movimiento, errores de consola: 0
+ok  390 la pausa congela la caminata de la hoja (4 = 4)
+ok  390 caminando en 12 de 12 cuadros grabados
+ok  390 avanza a la derecha al bajar; pasos (px): 8 4 8 4 8 4 8 8 0 8 4
+ok  390 no brinca de altura (abajo: 842)
+ok  390 el ciclo avanza: 401340135512
+    390 pista: caminar4@169.7 caminar0@177.7 caminar1@181.7 caminar3@189.7 caminar4@193.7 caminar0@201.7 caminar1@205.7 caminar3@213.7 caminar5@221.7 caminar5@221.7 caminar1@229.7 caminar2@233.7
+ok  390 al detenerse presenta con globo: «frase de prueba 1 (dos)» (senalar1)
+ok  390 el globo cabe en la ventana
+ok  390 el clic trae otra frase: «frase de repuesto A»
+ok  390 Escape cierra el globo
+ok  390 en el pie se duerme (dormir0)
+ok  390 en silencio: sentado en la esquina (x 153.7) y sin globo al tocarlo
+ok  390 el silencio se recuerda (localStorage)
+ok  390 errores de consola: 0
+ok  390 menos movimiento: quieto en su esquina (x 153.7 → 153.7, sentado)
+ok  390 menos movimiento: globo sin animación (none)
+ok  390 menos movimiento, errores de consola: 0

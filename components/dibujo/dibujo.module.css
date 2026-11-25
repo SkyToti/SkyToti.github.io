@@ -1,0 +1,139 @@
+/* Kit de dibujo: «Riso con mano de marcador». Los rótulos van en Shantell Sans (woff2 latin, solo aquí).
+   shantell-sans-latin.woff2 es una INSTANCIA (167 → 101 KB): Latin básico + Latin-1 + puntuación, eje wght de 600 a
+   800 y «INFM» 100 / «BNCE» 55 fijos (lo único que usan los rótulos, el tráfico, los globos y las estaciones; el
+   font-variation-settings de esos sitios ya no cambia nada). Se rehace desde shantell-sans-completa.woff2 con
+   subset-font (harfbuzz): variationAxes { wght: { min: 600, max: 800 }, INFM: 100, BNCE: 55 }. La completa solo la usa
+   el laboratorio (.pose figcaption, peso 600 con los ejes por omisión).
+   La @font-face de «Shantell Sans» NO va en el CSS: la declara lib/arranque.ts tras `load` (o un <noscript>). */
+@font-face {
+  font-family: "Shantell Sans Completa";
+  src: url("/fuentes/shantell-sans-completa.woff2") format("woff2");
+  font-weight: 300 800;
+  font-display: swap;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* La línea que hierve: tres cuadros; solo uno a la vez (DibujoVivo cambia data-f, nada más). */
+.svg :global(.f1),
+.svg :global(.f2) {
+  display: none;
+}
+.svg[data-f="1"] :global(.f0),
+.svg[data-f="2"] :global(.f0) {
+  display: none;
+}
+.svg[data-f="1"] :global(.f1),
+.svg[data-f="2"] :global(.f2) {
+  display: inline;
+}
+
+.vivo {
+  position: relative;
+}
+
+/* La lámpara es un botón de verdad, encima de su dibujo. */
+.lampara {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+.lampara:focus-visible {
+  outline: 2px solid #f5b455;
+  outline-offset: 2px;
+}
+
+.deNuevo {
+  display: block;
+  margin: 4px 0 0 auto;
+  padding: 6px 2px;
+  border: 0;
+  background: transparent;
+  color: #a7a698;
+  font: 500 12px/1 var(--letra-mono, ui-monospace, monospace);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.deNuevo:hover,
+.deNuevo:focus-visible {
+  color: #f5b455;
+}
+.deNuevo:focus-visible {
+  outline: 2px solid #f5b455;
+  outline-offset: 2px;
+}
+
+/* La portada: la composición ancha (7 de 12 columnas) o la vertical, según el ancho del contenedor. */
+.escritorio {
+  container-type: inline-size;
+}
+.alto {
+  display: none;
+  max-width: 440px;
+  margin-inline: auto;
+}
+@container (max-width: 560px) {
+  .ancho {
+    display: none;
+  }
+  .alto {
+    display: block;
+  }
+}
+
+/* Hoja de personajes */
+.hoja {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+.hojaAgente {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+}
+.pose {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 16px;
+  border-radius: 6px;
+  background: #121b2e;
+}
+.pose figcaption {
+  font: 600 15px/1.3 "Shantell Sans Completa", cursive;
+  color: #a7a698;
+}
+.pose figcaption b {
+  color: #f5b455;
+  font-weight: 760;
+}
+.pose .svg {
+  max-height: 280px;
+}
+
+/* Zonas tocables (alTocar): mano al pasar; si son accesibles, un anillo punteado al enfocarlas con teclado. */
+.svg :global([data-tocable]) {
+  cursor: pointer;
+}
+.svg :global([data-tocable]:focus) {
+  outline: none;
+}
+.svg :global([data-tocable]:focus-visible) {
+  stroke: #f5b455;
+  stroke-width: 2.5;
+  stroke-dasharray: 6 5;
+}
+
+/* Tambaleo esperando a caer mientras llega Motion: oculto SOLO con movimiento. */
+:global(html.mueve) .esperaCaer {
+  opacity: 0;
+}

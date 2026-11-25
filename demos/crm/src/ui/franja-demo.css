@@ -1,0 +1,67 @@
+/* La franja de la demo: en la PC y el iPad toma el lugar de la firma del héroe (abajo a la izquierda); en el
+   teléfono va arriba de la barra. Debajo de las pantallas completas y los detalles (z-index 25 < 30). */
+.franja-demo {
+  position: fixed;
+  left: 14px;
+  bottom: calc(8px + env(safe-area-inset-bottom));
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100vw - 28px);
+  padding: 5px 6px 5px 12px;
+  border-radius: 999px;
+  background: rgba(252, 251, 248, 0.94);
+  box-shadow: 0 0 0 1px rgba(24, 25, 25, 0.1), 0 8px 20px -12px rgba(24, 25, 25, 0.4);
+  font-family: var(--letra);
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--tinta-2);
+  white-space: nowrap;
+}
+.franja-demo a {
+  color: var(--tinta);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.franja-demo button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tinta-2);
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+.franja-demo button:hover {
+  background: var(--control);
+}
+.franja-demo a:focus-visible,
+.franja-demo button:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}
+/* la firma dice lo mismo: mientras la franja está, no se encima */
+html[data-franja-demo] .firma {
+  visibility: hidden;
+}
+/* el recorrido guiado trae su propia salida al final */
+html[data-recorrido] .franja-demo {
+  display: none;
+}
+@media (max-width: 640px) {
+  .franja-demo {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    font-size: 12px;
+  }
+  html[data-franja-demo] .firma {
+    visibility: visible;
+  }
+}

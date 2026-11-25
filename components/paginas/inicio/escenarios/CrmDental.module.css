@@ -1,0 +1,111 @@
+/* Escenario 2 · CRM dental. Celular y tableta: apilado (texto, tablero, muela-mapa). Escritorio: una pantalla de
+   100svh; el tablero se sale por la derecha y la orilla izquierda queda libre para la línea viva. */
+.escena {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.escena .numero {
+  left: auto;
+  right: var(--relleno);
+}
+.titulo {
+  font-size: clamp(2.25rem, 5vw, 4.75rem);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variation-settings: "wdth" 88;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+.resumen {
+  margin-top: 1rem;
+  color: var(--color-hueso-apagado);
+  font-size: 1.125rem;
+}
+.pildoras {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.botones {
+  margin-top: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+/* el botón de la demo, GRANDE */
+.demo {
+  min-height: 60px;
+  padding-inline: 1.5rem;
+  font-size: 1.125rem;
+}
+.agenda,
+.celular {
+  display: none;
+}
+/* La muela va sin foto (la prueba es el tablero grande): fuera su hueco con cinta. */
+.muela {
+  margin-inline: var(--relleno);
+}
+.muela :global([data-g="foto"]),
+.muela :global([data-g="sombra-foto"]),
+.muela :global([data-g="foto-sombra"]) {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  section.escena {
+    --relleno: max(52px, 4vw);
+    display: block;
+    height: 100svh;
+    min-height: 600px;
+    padding: 0;
+  }
+  /* «02» enorme abajo a la izquierda, debajo del texto */
+  .escena .numero {
+    top: auto;
+    bottom: 3svh;
+    left: var(--relleno);
+    right: auto;
+    font-size: min(24vw, 36svh);
+  }
+  .escena .texto {
+    position: absolute;
+    z-index: 2;
+    top: 19svh;
+    left: 0;
+  }
+  .tablero {
+    position: absolute;
+    z-index: 1;
+    top: 22svh;
+    right: -9vw;
+  }
+  .agenda {
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 9svh;
+    right: 5vw;
+  }
+  .celular {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    top: 41svh;
+    right: 6vw;
+  }
+  /* tapa la esquina inferior izquierda del tablero */
+  .muela {
+    position: absolute;
+    z-index: 3;
+    top: calc(22svh + 62vw * 0.625 - 17vw);
+    left: calc(47vw - 16vw);
+    width: 30vw;
+    margin: 0;
+  }
+}

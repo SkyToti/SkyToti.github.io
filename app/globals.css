@@ -1,0 +1,404 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "lenis/dist/lenis.css";
+
+/* «Plano vivo» (DIRECCION.md). Base, retícula de maquetación, letra y los estados del movimiento. */
+html {
+  background: var(--color-noche);
+  color: var(--color-hueso);
+  font-family: var(--letra-texto);
+  color-scheme: dark;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  overflow-x: clip;
+  font-optical-sizing: auto;
+}
+
+::selection {
+  background: var(--color-ambar);
+  color: var(--color-noche);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ambar);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Retícula de maquetación: 4 / 8 / 12 columnas (DIRECCION.md §3) ─────────── */
+.marco {
+  width: 100%;
+  max-width: calc(1320px + 2 * var(--margen));
+  margin-inline: auto;
+  padding-inline: var(--margen);
+  --margen: 20px;
+}
+.columnas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 16px;
+}
+@media (min-width: 640px) {
+  .marco {
+    --margen: 32px;
+  }
+  .columnas {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+}
+@media (min-width: 1024px) {
+  .marco {
+    --margen: 48px;
+  }
+  .columnas {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1280px) {
+  .marco {
+    --margen: 64px;
+  }
+}
+
+/* ── Letra ────────────────────────────────────────────────────────────────── */
+.t-nombre {
+  font-size: clamp(2.75rem, 8vw, 7rem);
+  font-weight: 700;
+  font-variation-settings: "wdth" 90;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+.t-seccion {
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 650;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  font-variation-settings: "wdth" 92;
+  text-wrap: balance;
+}
+.t-lamina {
+  font-size: clamp(1.625rem, 3vw, 2.5rem);
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  font-variation-settings: "wdth" 92;
+  text-wrap: balance;
+}
+/* Rótulos del plano: mono, mayúsculas, 12–13 px. Nunca párrafos. */
+.rotulo {
+  font-family: var(--letra-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-hueso-apagado);
+}
+.rotulo-chico {
+  font-family: var(--letra-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.prosa > * + * {
+  margin-top: 1em;
+}
+.prosa ul {
+  list-style: disc;
+  padding-left: 1.25em;
+}
+.prosa a {
+  color: var(--color-hueso);
+  text-decoration: underline;
+  text-decoration-color: var(--color-ambar);
+  text-underline-offset: 0.2em;
+}
+.prosa strong {
+  color: var(--color-hueso);
+  font-weight: 600;
+}
+
+/* ── Botones y enlaces ────────────────────────────────────────────────────── */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 48px;
+  padding: 0 1rem;
+  border-radius: 6px;
+  border: 1.5px solid var(--color-linea-viva);
+  color: var(--color-hueso);
+  font-weight: 550;
+  line-height: 1.2;
+  transition:
+    border-color var(--dur-micro) ease,
+    background-color var(--dur-micro) ease,
+    color var(--dur-micro) ease;
+}
+@media (min-width: 640px) {
+  .boton {
+    padding: 0 1.25rem;
+  }
+}
+.boton:hover {
+  border-color: var(--color-hueso);
+}
+.boton-principal {
+  background: var(--color-ambar);
+  border-color: var(--color-ambar);
+  color: var(--color-noche);
+}
+.boton-principal:hover {
+  background: var(--color-hueso);
+  border-color: var(--color-hueso);
+}
+.enlace {
+  color: var(--color-hueso);
+  text-decoration: underline;
+  text-decoration-color: var(--color-linea-viva);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color var(--dur-micro) ease;
+}
+.enlace:hover {
+  text-decoration-color: var(--color-ambar);
+}
+
+/* ── Retícula de fondo: líneas de `linea` al 35 % cada 96 px, desvanecidas en las orillas ── */
+.reticula-fondo {
+  --paso: 96px;
+  background-image:
+    linear-gradient(to right, rgb(42 56 84 / 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(42 56 84 / 0.35) 1px, transparent 1px);
+  background-size: var(--paso) var(--paso);
+  mask-image: radial-gradient(ellipse at center, #000 45%, transparent 85%);
+}
+.reticula-fina {
+  --paso: 24px;
+}
+
+/* ── Letras que ruedan (web-cinematica, patrón 28) ─────────────────────────── */
+[data-rueda] {
+  --rueda-alto: 1.3;
+}
+[data-rueda-texto] {
+  display: inline-block;
+  line-height: var(--rueda-alto);
+  overflow: clip;
+  vertical-align: top;
+}
+.rueda-letra {
+  display: inline-block;
+  text-shadow: 0 calc(var(--rueda-alto) * 1em) currentColor;
+}
+
+/* ── Movimiento: estados iniciales ocultos SOLO con html.mueve ────────────────
+   Sin JavaScript, con prefers-reduced-motion o si el movimiento no arrancó en 10 s, no hay `mueve` y todo se
+   ve completo (lib/arranque.ts). */
+html.mueve [data-lineas]:not(.partido) {
+  visibility: hidden;
+}
+html.mueve [data-revelar] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+/* Red de seguridad (components/movimiento/Animar.tsx): si la animación no corrió, se muestra sin animar. */
+html.mueve .a-salvo[data-lineas],
+html.mueve .a-salvo[data-revelar] {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── La línea viva (components/mundo/, MUNDO.md) ──────────────────────────────
+   Un solo <path> detrás del contenido de <main> que pasa por las anclas [data-ancla] de cada [data-estacion].
+   Las anclas son spans vacíos de 1×1 que se colocan aquí; `--carril` (escritorio) dice a cuántos px a la izquierda
+   del ancla corre la línea en vertical y `--forma` cómo se acerca (bulto · esquina · paso · fin). En celular y
+   tableta (< 1024) la línea baja a ~10 px del borde y hace un rizo corto hacia cada ancla. */
+.linea-viva {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  overflow: visible;
+  pointer-events: none;
+}
+.linea-viva-trazo {
+  fill: none;
+  stroke: var(--color-hueso);
+  stroke-opacity: 0.55;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.linea-viva[data-quieto] .linea-viva-trazo {
+  stroke-opacity: 0.35;
+}
+.linea-viva-aro {
+  fill: none;
+  stroke: var(--color-ambar);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.linea-viva-chispa,
+.linea-viva-estela {
+  fill: var(--color-ambar);
+}
+.linea-viva[data-quieto] .linea-viva-chispa,
+.linea-viva[data-quieto] .linea-viva-estela {
+  display: none;
+}
+
+[data-ancla] {
+  position: absolute;
+  display: block;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  --forma: bulto;
+}
+/* El subrayado del nombre: una caja de alto 0 entre el nombre y el titular. En celular la línea lo traza de derecha
+   a izquierda y baja por el margen; en escritorio, de izquierda a derecha hasta el canalón junto a la escena. */
+.subrayado {
+  position: relative;
+  height: 0;
+  /* A media distancia entre el pie de las letras del nombre (≈ 0.118 em bajo su caja) y el titular (mt-7/8/9). */
+  --bajo: calc(14px + clamp(2.75rem, 8vw, 7rem) * 0.059);
+}
+@media (min-width: 640px) {
+  .subrayado {
+    --bajo: calc(16px + clamp(2.75rem, 8vw, 7rem) * 0.059);
+  }
+}
+@media (min-width: 1024px) {
+  .subrayado {
+    --bajo: calc(18px + clamp(2.75rem, 8vw, 7rem) * 0.059);
+  }
+}
+.subrayado > span {
+  position: absolute;
+  top: var(--bajo);
+  width: 1px;
+  height: 1px;
+}
+.subrayado [data-linea-inicio] {
+  right: 0;
+}
+.ancla-subrayado {
+  left: -6px;
+  --forma: esquina;
+}
+.ancla-escena {
+  top: -16px;
+  left: 8px;
+}
+.ancla-rotulo,
+.ancla-titulo {
+  top: -16px;
+  left: calc(var(--margen) + 8px);
+}
+.ancla-titulo {
+  top: -26px;
+}
+.ancla-rotulo-lamina {
+  top: -16px;
+  left: 8px;
+}
+.ancla-pie {
+  top: calc(100% - 16px);
+  left: 26px;
+  --forma: fin;
+}
+@media (min-width: 1024px) {
+  .subrayado [data-linea-inicio] {
+    right: auto;
+    left: 0;
+  }
+  .ancla-subrayado {
+    left: auto;
+    right: 0;
+    --carril: 12px;
+  }
+  .ancla-escena {
+    top: calc(100% - 40px);
+    left: -12px;
+    --forma: paso;
+  }
+  .ancla-rotulo,
+  .ancla-titulo {
+    left: calc(var(--margen) - 16px);
+    top: 0.57rem;
+    --carril: -14px;
+  }
+  .ancla-titulo {
+    top: calc(clamp(2rem, 4.5vw, 3.5rem) * 0.52);
+  }
+  .ancla-numero {
+    top: 50%;
+    left: -16px;
+    --carril: -14px;
+  }
+  .ancla-par {
+    --carril: -60px;
+  }
+  .ancla-pie {
+    top: 50%;
+    left: 50%;
+    --forma: paso;
+  }
+}
+/* Al llegar la chispa: el número de la lámina se enciende. */
+.lamina-numero {
+  transition: color 0.4s ease;
+}
+[data-estacion].llego .lamina-numero {
+  color: var(--color-ambar);
+}
+
+/* Avance de lectura bajo la cabecera (components/mundo/AvanceLectura.tsx). */
+.avance {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 1px;
+  pointer-events: none;
+  display: none;
+}
+html.js .avance {
+  display: block;
+}
+.avance-trazo {
+  position: absolute;
+  inset: 0;
+  background: var(--color-hueso);
+  opacity: 0.55;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+.avance-chispa {
+  position: absolute;
+  top: -2px;
+  left: -2.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--color-ambar);
+}

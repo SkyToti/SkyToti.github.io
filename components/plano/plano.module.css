@@ -1,0 +1,331 @@
+/* El plano y sus controles. Colores y tiempos por variable (app/tokens.css) con el valor de DIRECCION.md de respaldo.
+   Solo se anima transform, opacity y stroke-dashoffset (desde PlanoVivo). */
+
+.escena {
+  display: grid;
+  gap: 1.25rem;
+}
+
+/* El contenedor decide la composición: `ancho` solo cuando cabe con letra de 12 px reales (16.5 × 880 / 1200). */
+.plano {
+  container-type: inline-size;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Retícula de fondo: líneas de `linea` al 35 % cada 96 px, desvanecida en las orillas. */
+.plano::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(to right, var(--color-linea, #2a3854) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-linea, #2a3854) 1px, transparent 1px);
+  background-size: 96px 96px;
+  background-position: center;
+  mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--letra-mono, ui-monospace, monospace);
+}
+
+.ancho {
+  display: none;
+}
+
+.alto {
+  max-width: 420px;
+  margin-inline: auto;
+}
+
+@container (min-width: 880px) {
+  .ancho {
+    display: block;
+  }
+  .alto {
+    display: none;
+  }
+}
+
+/* Con movimiento, el plano se esconde hasta que PlanoVivo lo deja en su estado inicial (sin destello del final).
+   Si el movimiento no arranca, el guion de arranque quita `mueve` y se ve completo. */
+:global(html.mueve) .vivo:not([data-listo]) .plano svg {
+  opacity: 0;
+}
+
+/* ---- trazos */
+.trazoBase,
+.trazoVivo {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.trazoBase {
+  stroke: var(--color-linea, #2a3854);
+}
+.trazoVivo {
+  stroke: var(--color-linea-viva, #5b6f96);
+}
+.punteado {
+  stroke-dasharray: 5 6;
+}
+
+/* ---- nodos */
+.caja {
+  fill: var(--color-noche, #0b1220);
+  stroke: var(--color-linea, #2a3854);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.cajaViva,
+.cajaAlto {
+  fill: none;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.cajaViva {
+  stroke: var(--color-linea-viva, #5b6f96);
+}
+.cajaAlto {
+  stroke: var(--color-alto, #f0776b);
+}
+.marcadorBase,
+.marcadorVivo {
+  fill: none;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.marcadorBase {
+  stroke: var(--color-hueso-apagado, #a7a698);
+}
+.marcadorVivo {
+  stroke: var(--color-hueso, #ede6d6);
+}
+.relleno {
+  stroke: none;
+}
+.marcadorBase.relleno {
+  fill: var(--color-hueso-apagado, #a7a698);
+}
+.marcadorVivo.relleno {
+  fill: var(--color-hueso, #ede6d6);
+}
+.etiquetaBase,
+.etiquetaViva {
+  letter-spacing: 0.06em;
+}
+.etiquetaBase {
+  fill: var(--color-hueso-apagado, #a7a698);
+}
+.etiquetaViva {
+  fill: var(--color-hueso, #ede6d6);
+}
+.nota {
+  fill: var(--color-hueso-apagado, #a7a698);
+}
+
+/* palomita / tache */
+.marcaFondo {
+  fill: var(--color-noche, #0b1220);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.marcaHecho {
+  stroke: var(--color-ambar, #f5b455);
+}
+.marcaAlto {
+  stroke: var(--color-alto, #f0776b);
+}
+.marcaTrazo {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- compuertas */
+.barra {
+  fill: var(--color-hueso, #ede6d6);
+}
+.barraAlto {
+  fill: var(--color-alto, #f0776b);
+}
+.barraAbierta {
+  fill: var(--color-ambar, #f5b455);
+}
+.compuertaTexto {
+  fill: var(--color-hueso-apagado, #a7a698);
+  letter-spacing: 0.06em;
+}
+
+/* ---- cotas */
+.cotaValor {
+  fill: var(--color-hueso, #ede6d6);
+  font-variant-numeric: tabular-nums;
+}
+.cotaEtiqueta {
+  fill: var(--color-hueso-apagado, #a7a698);
+}
+
+/* ---- globos */
+.globoEntra,
+.globoSale {
+  fill: var(--color-superficie, #121b2e);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.globoEntra {
+  stroke: var(--color-linea-viva, #5b6f96);
+}
+.globoSale {
+  stroke: var(--color-ambar, #f5b455);
+}
+.globoTexto {
+  fill: var(--color-hueso, #ede6d6);
+}
+
+/* ---- pulsos (los crea PlanoVivo) */
+.pulsoAmbar {
+  fill: var(--color-ambar, #f5b455);
+}
+.pulsoAlto {
+  fill: var(--color-alto, #f0776b);
+}
+
+/* ---- controles */
+.controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  min-height: 44px;
+  font-family: var(--letra-mono, ui-monospace, monospace);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.controles:not([data-activo]) {
+  visibility: hidden;
+}
+:global(html:not(.mueve)) .controles {
+  display: none;
+}
+.boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--color-linea-viva, #5b6f96);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-hueso, #ede6d6);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  transition: border-color var(--dur-micro, 0.18s) ease;
+}
+.boton:hover {
+  border-color: var(--color-ambar, #f5b455);
+}
+.boton:focus-visible {
+  outline: 2px solid var(--color-ambar, #f5b455);
+  outline-offset: 3px;
+}
+.icono {
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+}
+.estado {
+  margin-left: auto;
+  white-space: nowrap;
+  color: var(--color-hueso-apagado, #a7a698);
+}
+
+/* ---- lista de pasos */
+.pasos {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+@media (min-width: 1024px) {
+  .pasos {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.75rem;
+  }
+}
+.paso {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--color-linea, #2a3854);
+  border-radius: 6px;
+  color: var(--color-hueso-apagado, #a7a698);
+  transition: border-color var(--dur-ui, 0.4s) ease, color var(--dur-ui, 0.4s) ease;
+}
+.paso[aria-current="step"] {
+  border-color: var(--color-ambar, #f5b455);
+  color: var(--color-hueso, #ede6d6);
+}
+.pasoBoton {
+  min-width: 2.25rem;
+  min-height: 1.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-hueso, #ede6d6);
+  font-family: var(--letra-mono, ui-monospace, monospace);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-align: left;
+}
+.pasoBoton:not(:disabled) {
+  cursor: pointer;
+}
+/* Toda la tarjeta del paso responde al toque: el botón se estira sobre ella. */
+.pasoBoton:not(:disabled)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+}
+.pasoBoton:focus-visible {
+  outline: none;
+}
+.pasoBoton:focus-visible::after {
+  outline: 2px solid var(--color-ambar, #f5b455);
+  outline-offset: 2px;
+}
+.paso[aria-current="step"] .pasoBoton {
+  color: var(--color-ambar, #f5b455);
+}
+.pasoTexto {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.pasoTexto :global(p) {
+  margin: 0;
+}
+.pasoTexto :global(strong) {
+  color: var(--color-hueso, #ede6d6);
+  font-weight: 600;
+}

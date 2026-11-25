@@ -1,0 +1,113 @@
+/* El tramo horizontal de YaContesto (TramoYaContesto.tsx). Por omisión (celular, tableta, menos movimiento, sin JS):
+   el rótulo arriba y las tres pantallas apiladas. Modo de lado (≥ 1024 px, con movimiento, `html.mueve`): una caja de
+   100vw × 100svh que recorta una pista de 300vw; el JS la fija y la corre de lado. El modo se decide en CSS desde el
+   primer pintado (el guion de arranque pone `html.mueve`), así nada salta al llegar el JS. */
+.tramo {
+  --orilla: clamp(20px, 4vw, 72px);
+  position: relative;
+}
+.rotulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 0 var(--orilla) 8px;
+}
+.nombre {
+  color: var(--color-hueso);
+}
+/* el indicador solo tiene sentido de lado */
+.indicador {
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+.cuenta {
+  min-width: 3.2ch;
+  margin-right: 6px;
+  font-family: var(--letra-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--color-ambar);
+  font-variant-numeric: tabular-nums;
+}
+.ir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.raya {
+  display: block;
+  width: 30px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--color-linea-viva);
+  transform-origin: left center;
+  transition:
+    transform var(--dur-micro) ease,
+    background-color var(--dur-micro) ease;
+}
+.ir:hover .raya {
+  background: var(--color-hueso-apagado);
+}
+.ir[aria-current] .raya {
+  background: var(--color-ambar);
+}
+.ir:focus-visible {
+  outline-offset: 2px;
+}
+
+.pista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pantalla {
+  position: relative;
+}
+
+/* ── Modo de lado ─────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  :global(html.mueve) .tramo {
+    --orilla: max(52px, 4vw);
+    width: 100%;
+    height: 100svh;
+    overflow: clip;
+  }
+  /* el rótulo, fijo arriba (debajo de la cabecera) mientras dura el tramo */
+  /* Va en una placa lisa (color de la noche, sin sombra): las capturas pasan por debajo al correr la pista. */
+  :global(html.mueve) .rotulo {
+    position: absolute;
+    z-index: 3;
+    top: calc(57px + clamp(6px, 1.5svh, 18px));
+    left: calc(var(--orilla) - 16px);
+    padding: 4px 8px 4px 16px;
+    border: 1px solid var(--color-linea);
+    border-radius: 999px;
+    background: var(--color-noche);
+    pointer-events: none;
+  }
+  :global(html.mueve) .indicador {
+    display: inline-flex;
+    pointer-events: auto;
+  }
+  :global(html.mueve) .pista {
+    display: flex;
+    width: calc(var(--n, 3) * 100%);
+    height: 100%;
+    will-change: transform;
+  }
+  :global(html.mueve) .pantalla {
+    flex: 0 0 auto;
+    width: calc(100% / var(--n, 3));
+    height: 100%;
+  }
+  /* La línea viva rodea el tramo por la orilla: sus anclas no cuentan aquí (la llegada la despacha el tramo). */
+  :global(html.mueve) .tramo :global([data-ancla]) {
+    display: none;
+  }
+}

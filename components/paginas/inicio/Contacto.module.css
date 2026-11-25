@@ -1,0 +1,99 @@
+/* Fila K · Contacto. Celular y tableta: apilado dentro del relleno, el buzón debajo a todo el ancho. Escritorio:
+   el texto a la izquierda (desde 6vw: la orilla queda libre para la línea) con «Escríbeme» enorme; la mesa con Haku
+   y el buzón pegado a su orilla (una sola escena, 54vw) abajo a la derecha, saliéndose 6vw por la orilla. */
+.escena {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.texto {
+  position: relative;
+  z-index: 1;
+  padding-inline: var(--relleno);
+}
+.rotulo {
+  color: var(--color-hueso-apagado);
+}
+/* el titular que es el botón principal: enorme, en hueso, con la flecha en ámbar que avanza al pasar */
+.escribeme {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.18em;
+  margin-top: 0.75rem;
+  font-size: clamp(3.25rem, 15vw, 6rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-variation-settings: "wdth" 85;
+  color: var(--color-hueso);
+  text-decoration: none;
+  border-radius: 8px;
+}
+.palabra {
+  text-decoration: underline;
+  text-decoration-color: var(--color-ambar);
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.14em;
+}
+.flecha {
+  display: inline-block;
+  color: var(--color-ambar);
+  font-size: 0.7em;
+  transition: translate 0.5s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.escribeme:hover .flecha,
+.escribeme:focus-visible .flecha {
+  translate: 0.18em 0;
+}
+.escribeme:hover {
+  color: var(--color-ambar);
+}
+.escribeme:focus-visible {
+  outline: 2px solid var(--color-ambar);
+  outline-offset: 6px;
+}
+.bloque {
+  margin-top: 2rem;
+  display: grid;
+  gap: 0.75rem;
+}
+.correo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  font-size: 1.125rem;
+}
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.buzon {
+  max-width: 640px;
+}
+
+@media (min-width: 1024px) {
+  /* «Escríbeme» gigante arriba a la izquierda; el buzón llena la mitad de abajo a la derecha y sale por la esquina */
+  .escena {
+    --ancho-buzon: min(54vw, 88svh);
+    --sale-buzon: 6vw;
+    display: block;
+  }
+  .texto {
+    padding-top: clamp(64px, 11svh, 132px);
+    padding-left: 6vw;
+    padding-right: 0;
+  }
+  .escribeme {
+    font-size: min(14vw, 24svh);
+  }
+  .bloque {
+    margin-top: clamp(1.5rem, 3.5svh, 2.5rem);
+    /* termina antes de donde empieza el buzón */
+    max-width: calc(100vw + var(--sale-buzon) - var(--ancho-buzon) - 6vw - 24px);
+  }
+  .buzon {
+    max-width: none;
+  }
+}

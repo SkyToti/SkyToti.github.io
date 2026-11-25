@@ -1,0 +1,152 @@
+/* «La tira» a todo lo ancho (MUNDO.md, fila T). Por omisión (sin JS, menos movimiento, celular) es una historieta
+   apilada a todo el ancho del relleno; en escritorio quieto, 2×2 de orilla a orilla. Solo con html.mueve y ≥ 1024 px
+   se vuelve el tramo horizontal que fija TiraViva: cada viñeta a ~46vw, la siguiente asomando por la derecha, la
+   cabeza (título) fija arriba y el indicador 1–4. `--relleno` llega del escenario (clamp(20px, 4vw, 72px)). */
+.tira {
+  /* ancho de una viñeta fijada: 46vw, o menos si la ventana es baja (que quepan título, dibujo y su texto) */
+  --ancho-v: min(46vw, calc((100svh - 22rem) * 1.3));
+  --hueco: 4vw;
+  position: relative;
+}
+
+.escenario {
+  position: relative;
+}
+
+.pista {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--relleno, 20px);
+  display: grid;
+  gap: 3.5rem;
+}
+
+.vineta {
+  margin: 0;
+  display: grid;
+  gap: 1.1rem;
+  align-content: start;
+}
+
+.lienzo {
+  aspect-ratio: 520 / 400;
+  overflow: hidden;
+}
+.lienzo svg {
+  overflow: hidden;
+}
+
+/* debajo del dibujo: el número grande, el título del paso y su frase (HTML real) */
+.pie {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  align-items: start;
+}
+.numero {
+  font: 600 clamp(1.75rem, 3vw, 2.75rem) / 1 var(--letra-mono, ui-monospace, monospace);
+  letter-spacing: -0.02em;
+  color: var(--color-ambar, #f5b455);
+}
+.titulo {
+  margin: 0;
+  font-size: clamp(1.25rem, 1.9vw, 1.75rem);
+  line-height: 1.15;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--color-hueso, #ede6d6);
+}
+.texto {
+  margin: 0.45rem 0 0;
+  max-width: 46ch;
+  font-size: clamp(1rem, 1.1vw, 1.125rem);
+  line-height: 1.5;
+  color: var(--color-hueso-apagado, #a7a698);
+}
+
+/* el indicador 1–4 solo existe en el tramo fijado */
+.indicador {
+  display: none;
+}
+
+/* el rótulo de la máquina en el idioma de la página */
+.tira[data-idioma="es"] :global([data-g="rotulo-en"]),
+.tira[data-idioma="en"] :global([data-g="rotulo-es"]) {
+  display: none;
+}
+/* lo que solo existe mientras corre la escena (el tache, las chispas, la luz coral) */
+.tira :global([data-g="tache"]),
+.tira :global([data-g="chispas"]),
+.tira :global([data-g="luz-mal"]) {
+  opacity: 0;
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .pista {
+    gap: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* quieta (sin JS o con menos movimiento): 2×2 de orilla a orilla, cada viñeta casi la mitad de la ventana */
+  .pista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4.5rem 4vw;
+  }
+}
+
+/* el tramo fijado: cabeza arriba, una viñeta centrada por tramo, la siguiente asomando a la derecha */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  :global(html.mueve) .tira[data-modo="pin"] .escenario {
+    height: 100svh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: center;
+    /* deja libre la cabecera fija del sitio (~56 px) */
+    padding-top: clamp(72px, 10svh, 104px);
+    overflow: hidden;
+  }
+  :global(html.mueve) .tira[data-modo="pin"] .pista {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: var(--hueco);
+    width: max-content;
+    max-width: none;
+    margin: 0;
+    padding-inline: calc((100% - var(--ancho-v)) / 2);
+    will-change: transform;
+  }
+  :global(html.mueve) .tira[data-modo="pin"] .vineta {
+    flex: none;
+    width: var(--ancho-v);
+  }
+  :global(html.mueve) .tira[data-modo="pin"] .indicador {
+    display: flex;
+    gap: 0.4rem;
+    align-self: start;
+    margin: 0;
+    padding: 0.6rem 24px 0 0;
+    font: 600 0.8125rem/1 var(--letra-mono, ui-monospace, monospace);
+    letter-spacing: 0.08em;
+  }
+  .marca {
+    display: inline-flex;
+    align-items: flex-end;
+    min-width: 2.75rem;
+    padding-top: 0.75rem;
+    border-top: 2px solid var(--color-linea-viva, #2a3854);
+    color: var(--color-hueso-apagado, #a7a698);
+    transition: border-color 0.3s ease, color 0.3s ease;
+  }
+  .tira:not([data-paso]) .marca:nth-child(1),
+  .tira[data-paso="1"] .marca:nth-child(1),
+  .tira[data-paso="2"] .marca:nth-child(2),
+  .tira[data-paso="3"] .marca:nth-child(3),
+  .tira[data-paso="4"] .marca:nth-child(4) {
+    border-color: var(--color-ambar, #f5b455);
+    color: var(--color-ambar, #f5b455);
+  }
+}

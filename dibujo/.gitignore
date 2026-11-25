@@ -1,0 +1,3 @@
+node_modules/
+# las capturas del laboratorio sí se guardan (la raíz ignora capturas/)
+!capturas/

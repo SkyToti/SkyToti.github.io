@@ -1,0 +1,73 @@
+/* 6 · «Mi papel» y «Tecnología». */
+.papel {
+  --relleno: clamp(20px, 4vw, 72px);
+  border-top: 1px solid var(--color-linea);
+}
+.columnas {
+  display: grid;
+  gap: 56px;
+  padding-inline: var(--relleno);
+}
+.izq {
+  display: grid;
+  gap: 48px;
+}
+.titulo {
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  font-variation-settings: "wdth" 88;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+.prosa {
+  margin-top: 1.5rem;
+  max-width: 40rem;
+  font-size: clamp(1.1875rem, 1.75vw, 1.625rem);
+  line-height: 1.5;
+  color: var(--color-hueso);
+}
+.tituloChico {
+  font-family: var(--letra-mono);
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ambar);
+}
+.prosaChica {
+  margin-top: 1rem;
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--color-hueso-apagado);
+}
+.lista {
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-linea);
+}
+.lista li {
+  padding-block: 0.7rem;
+  border-bottom: 1px solid var(--color-linea);
+  font-family: var(--letra-mono);
+  font-size: clamp(1rem, 1.35vw, 1.3125rem);
+  line-height: 1.35;
+  color: var(--color-hueso);
+}
+
+@media (min-width: 1024px) {
+  .papel {
+    --relleno: max(52px, 4vw);
+    padding-block: 12svh;
+  }
+  .columnas {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    column-gap: 8vw;
+    align-items: start;
+  }
+  .der {
+    padding-top: 1.25rem;
+  }
+}

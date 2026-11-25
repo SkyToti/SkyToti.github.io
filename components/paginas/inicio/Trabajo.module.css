@@ -1,0 +1,50 @@
+/* 3 · Trabajo (Trabajo.tsx): el encabezado a todo lo ancho y las bandas del tráfico entre escenarios. */
+.trabajo {
+  --orilla: clamp(20px, 4vw, 72px);
+  padding-block: clamp(72px, 12svh, 128px) clamp(48px, 8svh, 96px);
+}
+.cabeza {
+  padding-inline: var(--orilla);
+  padding-bottom: clamp(24px, 5svh, 56px);
+}
+/* «Trabajo» gigante, de orilla a orilla */
+h2.titulo {
+  font-size: clamp(4rem, 19vw, 17rem);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  font-variation-settings: "wdth" 84;
+  color: var(--color-hueso);
+}
+.lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Una banda del tráfico: de orilla a orilla (100vw, lo da trafico.module.css); lo que cruza entra y sale por el borde
+   de la ventana. La línea viva la cruza por detrás (`data-linea="detras"`); prefiere sus orillas (`data-pasillo`). */
+.paso {
+  --libre: 24px;
+  position: relative;
+}
+.pasillo {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--libre);
+}
+.izq {
+  left: 0;
+}
+.der {
+  right: 0;
+}
+@media (min-width: 1024px) {
+  .trabajo {
+    --orilla: max(52px, 4vw);
+  }
+  .paso {
+    --libre: 44px;
+  }
+}

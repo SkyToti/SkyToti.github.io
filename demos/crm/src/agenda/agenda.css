@@ -1,0 +1,589 @@
+/* ── La agenda a pantalla completa (BRIEF-4 §4.C) ───────────────────────── */
+.agenda {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 14px 24px 12px;
+  background: var(--papel);
+  color: var(--tinta);
+}
+.agenda-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.agenda-regresar {
+  margin-left: -10px;
+}
+.agenda-vistas,
+.agenda-unidades {
+  display: flex;
+  gap: 4px;
+}
+.agenda-vista,
+.agenda-unidad {
+  position: relative;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--r-control);
+  font-size: 15px;
+  color: var(--tinta-2);
+  transition: color 0.2s, background-color 0.2s;
+}
+.agenda-vista:hover,
+.agenda-unidad:hover {
+  background: #ececec;
+  color: var(--tinta);
+}
+.agenda-vista[aria-selected="true"],
+.agenda-unidad[aria-selected="true"] {
+  color: var(--tinta);
+  font-weight: 500;
+}
+/* la elegida lleva el punto lima debajo (lima = lo que tú elegiste) */
+.agenda-vista[aria-selected="true"]::after,
+.agenda-unidad[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--lima);
+  box-shadow: 0 0 0 1px #a8ba0e;
+}
+.agenda-unidades {
+  margin: 4px 0 0 -14px;
+}
+.agenda-cabeza {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.agenda-titulo {
+  margin: 0;
+  font-size: var(--t-titulo);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.agenda-que {
+  margin: 8px 0 0;
+  font-size: 15px;
+  color: var(--tinta-2);
+}
+.agenda-fecha {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+.agenda-dia,
+.agenda-semana {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  min-height: 0;
+}
+.agenda-resumen {
+  display: flex;
+  gap: 34px;
+  flex-wrap: wrap;
+}
+.agenda-cifra {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.agenda-cifra-valor {
+  font-size: 2.3rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.agenda-cifra-etiqueta {
+  font-size: 14px;
+  color: var(--tinta-2);
+}
+.agenda-lienzo,
+.agenda-rejilla {
+  position: relative;
+  min-height: 0;
+}
+.agenda-horas {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 24px;
+}
+.agenda-hora {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--tinta-2);
+}
+.agenda-carril {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--r-tesela);
+  color: #fff;
+}
+.agenda-pasado {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.11));
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.18);
+}
+.agenda-sillon {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  margin: 0;
+  display: grid;
+  font-size: 13px;
+  line-height: 1.05;
+}
+.agenda-sillon-n {
+  font-size: 2.2rem;
+  font-weight: 300;
+}
+.agenda-turno {
+  position: absolute;
+  top: 10px;
+  height: 22px;
+}
+.agenda-turno-linea {
+  position: absolute;
+  left: 0;
+  right: 6px;
+  top: 20px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.55);
+}
+.agenda-turno-linea::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+}
+.agenda-turno-quien {
+  position: absolute;
+  left: 8px;
+  top: 0;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.agenda-cita {
+  position: absolute;
+  top: 40px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 7px 8px;
+  overflow: hidden;
+  border-radius: 8px;
+  text-align: left;
+  color: #fff;
+  /* una veladura oscura: el blanco se lee aunque la cita caiga en el resplandor del carril (medido, §10) */
+  background: rgba(16, 22, 26, 0.26);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34);
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+.agenda-cita:hover {
+  background: rgba(16, 22, 26, 0.36);
+}
+.agenda-cita:focus-visible {
+  outline: 1.5px solid var(--lima);
+  outline-offset: 1px;
+}
+.agenda-cita[data-estado="atendida"],
+.agenda-cita[data-estado="no llegó"] {
+  background: rgba(16, 22, 26, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.26);
+}
+.agenda-cita[data-estado="no llegó"] {
+  box-shadow: none;
+  outline: 1px dashed rgba(255, 255, 255, 0.5);
+  outline-offset: -1px;
+}
+.agenda-cita[data-estado="en sillón"] {
+  background: rgba(16, 22, 26, 0.34);
+  box-shadow: inset 0 0 0 1.5px var(--lima);
+}
+.agenda-cita-hora {
+  font-size: 12px;
+}
+.agenda-cita-quien {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.agenda-cita-que {
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+/* en un bloque mediano, la primera palabra del tratamiento con puntos suspensivos si no cabe (antes se cortaba en seco) */
+.agenda-cita[data-tam="media"] .agenda-cita-que {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.agenda-cita-ahora {
+  position: absolute;
+  right: 7px;
+  top: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lima);
+}
+.agenda-cita[data-tam="media"] {
+  padding: 7px 6px;
+}
+.agenda-cita[data-tam="media"] .agenda-cita-quien {
+  font-size: 13px;
+}
+.agenda-cita[data-tam="angosta"] {
+  padding: 7px 4px;
+}
+.agenda-cita[data-tam="angosta"] .agenda-cita-hora {
+  font-size: 11.5px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+/* la hora nunca va en vertical: si «10:30» no cabe en un renglón, «:30» baja al segundo (BRIEF-5 §2.B2) */
+.agenda-cita-hora[data-partida] .agenda-cita-min {
+  display: block;
+}
+/* al arrastrar: la sombra de dónde cae la cita, con su hora y su sillón; en ámbar si chocaría con otra */
+.agenda-previa {
+  position: absolute;
+  z-index: 4;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+.agenda-previa[data-choca] {
+  box-shadow: inset 0 0 0 2px #f2b544;
+}
+.agenda-previa-texto {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  padding: 4px 9px;
+  border-radius: 7px;
+  background: var(--tinta);
+  color: #fff;
+  font-size: 12.5px;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.5);
+}
+.agenda-previa[data-choca] .agenda-previa-texto::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: #f2b544;
+  vertical-align: 0;
+}
+.agenda-ahora {
+  position: absolute;
+  top: 0;
+  width: 1.5px;
+  margin-left: -0.75px;
+  pointer-events: none;
+  z-index: 3;
+}
+/* la línea va en tramos: se interrumpe sobre la cita en curso (ver VistaDia) */
+.agenda-ahora-tramo {
+  position: absolute;
+  left: 0;
+  width: 1.5px;
+  background: var(--lima);
+}
+.agenda-ahora-hora {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--lima);
+  color: var(--tinta);
+  font-size: 12px;
+  font-weight: 500;
+}
+.agenda-vacia,
+.agenda-pronto {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--tinta-2);
+  font-size: 16px;
+}
+.agenda-nota {
+  margin: 0;
+  /* ~75 letras por renglón (80ch daba ~95 con esta letra, medido por el detector) */
+  max-width: 64ch;
+  font-size: 12.5px;
+  color: var(--tinta-2);
+}
+
+/* la semana: doctor × día */
+.agenda-dia-nombre {
+  position: absolute;
+  top: 6px;
+  margin: 0;
+  padding-left: 6px;
+  font-size: 13px;
+  color: var(--tinta-2);
+}
+.agenda-dia-nombre[data-hoy] {
+  color: var(--tinta);
+  font-weight: 500;
+}
+.agenda-dia-hoy {
+  font-weight: 400;
+}
+.agenda-fila {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+.agenda-quien {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.agenda-quien-texto {
+  display: grid;
+  line-height: 1.2;
+}
+.agenda-quien-nombre {
+  font-size: 14.5px;
+}
+.agenda-quien-que {
+  font-size: 12.5px;
+  color: var(--tinta-2);
+}
+.agenda-celda {
+  position: absolute;
+  top: 3px;
+  display: grid;
+  align-content: center;
+  /* abajo va la barra del día: el texto se centra en lo de arriba y no la toca (en el iPad horizontal la celda mide 46 px) */
+  padding: 0 10px 8px;
+  line-height: 1.15;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 6px;
+  color: #fff;
+}
+.agenda-celda-fondo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.agenda-celda[data-libre] {
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.1);
+  background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(24, 25, 25, 0.035) 6px 7px);
+}
+/* por abrir (Sur): el degradado entero (desvanecido, el blanco no alcanzaba 4.5:1) y un contorno punteado */
+.agenda-celda[data-pre]::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 1px dashed rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  pointer-events: none;
+}
+/* hoy: el contorno lima va por encima del degradado (una sombra interior quedaba debajo) */
+.agenda-celda[data-hoy]:not([data-libre]) {
+  outline: 1.5px solid var(--lima);
+  outline-offset: -1.5px;
+}
+.agenda-celda-dia {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 5px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.28);
+}
+.agenda-celda-tramo {
+  position: absolute;
+  top: -1px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.85);
+}
+.agenda-celda-u {
+  font-size: 14px;
+  font-weight: 500;
+}
+.agenda-celda-h {
+  font-size: 12px;
+}
+/* si no cabe en un renglón, se parte entre la hora y las citas, nunca dentro de «8:00–11:00» ni de «3 citas» */
+.agenda-celda-h > span:not(.agenda-celda-sep) {
+  white-space: nowrap;
+}
+/* columnas angostas (el iPad vertical): la hora y las citas, cada una en su renglón y sin el punto */
+.agenda-celda-h[data-dos] > span {
+  display: block;
+}
+.agenda-celda-h[data-dos] > .agenda-celda-sep {
+  display: none;
+}
+.agenda-rutas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.agenda-ruta {
+  stroke: rgba(24, 25, 25, 0.5);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+.agenda-ruta-hoy {
+  fill: var(--lima);
+  stroke: #a8ba0e;
+  stroke-width: 1;
+}
+
+/* mientras crece desde la tira, el contenido espera: entra cuando la agenda ya tiene su tamaño */
+.agenda:not([data-telefono]) > * {
+  animation: agenda-entra 0.3s var(--suave) 0.3s both;
+}
+@keyframes agenda-entra {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agenda:not([data-telefono]) > * { animation: none; }
+}
+
+/* la ficha de una cita: crece desde su bloque */
+.agenda-velo {
+  position: absolute;
+  inset: -12px;
+  z-index: 8;
+  background: rgba(246, 246, 246, 0.72);
+}
+.agenda-ficha {
+  position: absolute;
+  z-index: 9;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #fcfbf8;
+  color: var(--tinta);
+  box-shadow: 0 1px 2px rgba(24, 25, 25, 0.08), 0 28px 60px -30px rgba(24, 25, 25, 0.55);
+}
+.agenda-ficha-cuerpo {
+  display: grid;
+  gap: 6px;
+  padding: 22px 24px 18px;
+  animation: agenda-entra 0.25s var(--suave) 0.22s both;
+}
+.agenda-ficha-hora {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.agenda-ficha-dura {
+  font-size: 16px;
+  color: var(--tinta-2);
+}
+.agenda-ficha-quien {
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 500;
+}
+.agenda-ficha-que {
+  margin: 0;
+  font-size: 16px;
+}
+.agenda-ficha-datos {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 4px;
+}
+.agenda-ficha-datos div {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 10px;
+  font-size: 14.5px;
+}
+.agenda-ficha-datos dt {
+  color: var(--tinta-2);
+}
+.agenda-ficha-datos dd {
+  margin: 0;
+}
+.agenda-ficha-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 6px;
+}
+.agenda-accion {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: var(--r-control);
+  background: var(--tinta);
+  color: #fff;
+  font-size: 14.5px;
+}
+.agenda-accion[data-secundaria] {
+  background: transparent;
+  color: var(--tinta);
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.3);
+}
+.agenda-accion:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}
+.agenda-cita[data-abierta] {
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .agenda-ficha-cuerpo { animation: none; }
+}
+/* en un bloque angosto, el punto de «ahora» caía sobre la hora vertical: basta el contorno lima */
+.agenda-cita[data-tam="angosta"] .agenda-cita-ahora {
+  display: none;
+}

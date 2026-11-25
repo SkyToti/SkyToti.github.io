@@ -1,0 +1,30 @@
+/* Fila T · Cómo trabajo. El título gigante va dentro del tramo fijado (cabeza de la tira): arriba a la izquierda,
+   con el relleno de la página; en el tramo fijado la tira ya empieza a 40 px de la orilla, así que se descuentan. */
+.escena {
+  padding-block: clamp(56px, 9svh, 112px);
+}
+.titulo {
+  margin: 0 0 clamp(2rem, 5vw, 3rem);
+  padding-inline: var(--relleno);
+  font-size: clamp(2.75rem, 11vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  font-variation-settings: "wdth" 85;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+@media (min-width: 1024px) {
+  .escena {
+    padding-block: clamp(64px, 10svh, 120px) clamp(48px, 8svh, 96px);
+  }
+  .titulo {
+    font-size: clamp(4rem, 7.4vw, 8.5rem);
+    margin-bottom: clamp(1.5rem, 3svh, 2.5rem);
+  }
+  /* en el tramo fijado la tira empieza a 40 px de la orilla de la ventana: el título conserva su sitio */
+  :global(html.mueve) [data-modo="pin"] .titulo {
+    margin-bottom: 0;
+    padding-inline: max(0px, calc(var(--relleno) - 40px));
+  }
+}

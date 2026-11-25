@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estilo {{ESTILO}} · {{NOMBRE_ESTILO}} — laboratorio de dibujo</title>
+<link rel="preload" href="vendor/shantell-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="vendor/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="lab.css">
+</head>
+<body class="estilo-{{ESTILO}}">
+<nav class="lab-nav" aria-label="Estilos">
+  <a href="index.html">Laboratorio</a>
+  <a href="a.html">A · Tinta fina</a>
+  <a href="b.html">B · Marcador</a>
+  <a href="c.html">C · Risografía</a>
+</nav>
+<main class="portada">
+  <div class="texto">
+    <h1>Diego Benítez</h1>
+    <p class="rol">Desarrollador Full Stack · IA y webs con movimiento</p>
+    <p class="frase">Dirijo agentes de IA para construir software que funciona, con pruebas automáticas que lo demuestran.</p>
+    <div class="botones">
+      <a class="boton principal" href="#trabajo">Ver trabajo</a>
+      <a class="boton" href="#cv">CV</a>
+      <a class="boton" href="#correo">Correo</a>
+    </div>
+  </div>
+  <figure class="lamina horizontal">
+    {{SVG_H}}
+    <button class="otra-vez" type="button">ver de nuevo</button>
+  </figure>
+  <figure class="lamina vertical">
+    {{SVG_V}}
+    <button class="otra-vez" type="button">ver de nuevo</button>
+  </figure>
+</main>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/DrawSVGPlugin.min.js"></script>
+<script src="vendor/MotionPathPlugin.min.js"></script>
+<script src="escena.js"></script>
+</body>
+</html>

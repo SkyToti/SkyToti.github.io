@@ -1,0 +1,126 @@
+/* Piezas comunes de los escenarios a todo lo ancho (Escenario.tsx). Contrato: LEEME.md de esta carpeta. */
+
+/* La sección: de orilla a orilla, sin max-width. Recorta lo que sangra (overflow: clip, no hidden: no crea
+   contenedor de scroll ni rompe position: sticky). `isolation` deja el número gigante detrás de su propio
+   contenido, no detrás de la página. */
+.escenario {
+  --relleno: clamp(20px, 4vw, 72px);
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  overflow: clip;
+  padding-block: clamp(48px, 8svh, 96px);
+}
+@media (min-width: 1024px) {
+  .pantalla {
+    min-height: 100svh;
+  }
+  .largo {
+    min-height: 180svh;
+  }
+}
+
+/* El ancla de la línea viva. En < 1024 px la línea baja a ~10 px de la orilla izquierda: el ancla va ahí. */
+.ancla {
+  left: 12px;
+  top: 12px;
+}
+@media (min-width: 1024px) {
+  .ancla {
+    left: var(--ancla-x);
+    top: var(--ancla-y);
+  }
+}
+
+/* El bloque de texto: ancho de lectura y el relleno de la página a los dos lados. */
+.texto {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(min(var(--lectura, 34rem), 34rem) + 2 * var(--relleno));
+  padding-inline: var(--relleno);
+}
+.textoDer {
+  margin-inline-start: auto;
+}
+
+/* Lo que sangra. En celular y tableta: en el flujo, dentro del relleno (la línea corre a ~10 px de la orilla). */
+.sangra {
+  position: relative;
+  margin-inline: var(--relleno);
+}
+@media (min-width: 1024px) {
+  .sangra {
+    margin-inline: 0;
+    width: var(--ancho);
+    height: var(--alto, auto);
+  }
+  .capa {
+    position: absolute;
+  }
+  .capa[data-orilla="izq"] {
+    left: calc(-1 * var(--desplaza));
+    top: var(--en, 0);
+  }
+  .capa[data-orilla="der"] {
+    right: calc(-1 * var(--desplaza));
+    top: var(--en, 0);
+  }
+  .capa[data-orilla="arriba"] {
+    top: calc(-1 * var(--desplaza));
+    left: var(--en, 0);
+  }
+  .capa[data-orilla="abajo"] {
+    bottom: calc(-1 * var(--desplaza));
+    left: var(--en, 0);
+  }
+  .capa[data-orilla="arriba-izq"] {
+    left: calc(-1 * var(--desplaza));
+    top: var(--en, 0);
+  }
+  .capa[data-orilla="arriba-der"] {
+    right: calc(-1 * var(--desplaza));
+    top: var(--en, 0);
+  }
+  .capa[data-orilla="abajo-izq"] {
+    left: calc(-1 * var(--desplaza));
+    bottom: var(--en, 0);
+  }
+  .capa[data-orilla="abajo-der"] {
+    right: calc(-1 * var(--desplaza));
+    bottom: var(--en, 0);
+  }
+  /* En el flujo: el margen negativo la lleva más allá de la orilla (la del relleno incluida). */
+  .flujo[data-orilla$="izq"] {
+    margin-inline-start: calc(-1 * var(--desplaza));
+  }
+  .flujo[data-orilla$="der"] {
+    margin-inline-start: auto;
+    margin-inline-end: calc(-1 * var(--desplaza));
+  }
+  .flujo[data-orilla^="abajo"] {
+    margin-block-end: calc(-1 * var(--desplaza));
+  }
+  .flujo[data-orilla^="arriba"] {
+    margin-block-start: calc(-1 * var(--desplaza));
+  }
+}
+
+/* El número gigante: mono, en `linea`, detrás de todo. Lo pinta ::before (sin nodo de texto). */
+.numero {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: var(--relleno);
+  display: block;
+  font-family: var(--letra-mono);
+  font-size: min(22vw, 19rem);
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  color: var(--color-linea);
+  pointer-events: none;
+  user-select: none;
+}
+.numero::before {
+  content: attr(data-numero);
+}

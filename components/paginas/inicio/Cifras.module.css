@@ -1,0 +1,119 @@
+/* Cifras (Cifras.tsx): banda de orilla a orilla. Celular: 2×2. Escritorio (≥ 1024): cuatro en hilera, cada una ~1/4
+   del ancho, con canales de 5vw entre columnas (por ahí baja la línea viva; el tercero, 71.7–76.7vw, queda casi debajo
+   del hueco de la portada). */
+.banda {
+  --relleno: clamp(20px, 4vw, 72px);
+  position: relative;
+  overflow: clip;
+  padding: clamp(3.5rem, 9svh, 6.5rem) var(--relleno) clamp(4rem, 11svh, 7.5rem);
+  border-block: 1px solid var(--color-linea);
+}
+/* La chispa llega a las cifras por ABAJO de la banda: cuando llega (y Haku presenta, y los agentes estampan) la banda
+   ya está en la mitad de arriba de la ventana, así el globo de Haku, que vive abajo, no tapa ninguna cifra. */
+[data-ancla].ancla {
+  bottom: 36px;
+  left: calc(var(--relleno) + 2px);
+}
+.rotulo {
+  margin-bottom: clamp(1.75rem, 4svh, 3rem);
+}
+.lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+  row-gap: 2.75rem;
+}
+.cifra {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sello {
+  width: clamp(76px, 22vw, 112px);
+  aspect-ratio: 1;
+  margin-bottom: 0.25rem;
+}
+/* Los sellos estampan cuando LLEGA la chispa (no solos al 1.2 s de estar a la vista): hasta entonces su dibujo no
+   existe para el kit (sin caja no cuenta como «a la vista»); el hueco queda reservado. */
+:global(html.mueve) .banda:not(:global(.llego)) .sello :global(svg) {
+  display: none;
+}
+/* Línea de cota: |———| */
+.cota {
+  position: relative;
+  display: block;
+  height: 12px;
+  margin-bottom: 1rem;
+  border-inline: 1.5px solid var(--color-linea-viva);
+}
+.cota > span {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  border-top: 1.5px solid var(--color-linea-viva);
+}
+.valor {
+  font-family: var(--letra-mono);
+  color: var(--color-hueso);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.numero {
+  font-size: clamp(2.5rem, 11vw, 3.5rem);
+  font-weight: 600;
+}
+.afijo,
+.antesArriba {
+  font-size: clamp(1.125rem, 4.4vw, 1.5rem);
+  font-weight: 500;
+  color: var(--color-hueso-apagado);
+  letter-spacing: 0;
+}
+.afijo {
+  margin-inline: 0.06em;
+}
+.antesArriba {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.etiqueta {
+  margin-top: 0.875rem;
+  max-width: 28ch;
+  color: var(--color-hueso-apagado);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+@media (min-width: 640px) {
+  .lista {
+    column-gap: 5vw;
+  }
+  .sello {
+    width: clamp(88px, 11vw, 124px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .lista {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  /* la línea baja del hueco de la portada (77.5vw) por el tercer canal (71.7–76.7vw) hasta abajo de la banda */
+  [data-ancla].ancla {
+    bottom: 28px;
+    left: 74.25vw;
+  }
+  .sello {
+    width: clamp(96px, 8vw, 136px);
+  }
+  .numero {
+    font-size: clamp(3.5rem, 5.4vw, 6.25rem);
+  }
+  .afijo,
+  .antesArriba {
+    font-size: clamp(1.25rem, 1.7vw, 1.875rem);
+  }
+  .etiqueta {
+    font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
+  }
+}

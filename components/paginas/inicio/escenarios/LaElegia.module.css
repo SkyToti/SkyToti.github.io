@@ -1,0 +1,296 @@
+/* Escenario 6 · La Elegía (tramo alto). Celular y tableta: sin nada fijo; el texto y las cifras con la torre como
+   franja estrecha a la derecha, y debajo los dos videos y la tira. Escritorio: la subida (180svh) con un tablero fijo
+   de una pantalla (sticky): texto a la izquierda, Aurelion al centro con la torre real en su esquina, la torre
+   dibujada a la derecha (dos pantallas de alto con movimiento; entera y quieta sin él). Al final, la tira. */
+.escena {
+  --resorte-c: linear(0, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 16.7%, 1.017 19.4%, 1.067, 1.099 24.3%, 1.108 26%,
+      1.104, 1.088 30.8%, 1.026 38.9%, 1.006 42.7%, 0.991 47.6%, 0.985 51.8%, 0.994 67.2%, 1.001 85.2%, 1);
+}
+
+/* ── Celular y tableta ─────────────────────────────────────────────────── */
+.tablero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min(32%, 150px);
+  column-gap: 12px;
+  row-gap: 36px;
+  align-items: start;
+}
+.escena .numero {
+  top: -8px;
+  left: var(--relleno);
+}
+.texto {
+  position: relative;
+  z-index: 2;
+  grid-column: 1;
+  grid-row: 1;
+  padding-inline-start: var(--relleno);
+}
+.torre {
+  position: relative;
+  z-index: 1;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  width: 100%;
+  margin-top: 12px;
+}
+.aurelion,
+.laTorre {
+  grid-column: 1 / -1;
+}
+.tablero .laTorre {
+  width: min(62%, 340px);
+}
+.nube {
+  display: none;
+}
+
+.titulo {
+  font-size: clamp(1.75rem, 4.2vw, 4rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 90;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  color: var(--color-hueso);
+}
+.resumen {
+  margin-top: 1rem;
+  color: var(--color-hueso-apagado);
+  font-size: 1.0625rem;
+}
+.pildoras {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.boton {
+  margin-top: 1.5rem;
+}
+
+/* Las cifras: 59 en grande; las otras tres, chicas, en hilera. */
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 16px;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.grande {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1.5px solid var(--color-linea-viva);
+}
+.valor {
+  font-family: var(--letra-mono);
+  font-size: clamp(3.25rem, 7vw, 7rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ambar);
+}
+.chica {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-linea);
+}
+.valorChico {
+  font-family: var(--letra-mono);
+  font-size: 1.125rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-hueso);
+  white-space: nowrap;
+}
+.etiqueta {
+  color: var(--color-hueso-apagado);
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
+.grande .etiqueta {
+  font-size: 0.9375rem;
+}
+/* < 1024 px: la torre mide lo mismo que el texto (sin hueco a la derecha bajo ella): se estira a todo el alto de la
+   fila y, si así queda más ancha que su columna, se sale por la orilla derecha (la sección recorta) */
+@media (max-width: 1023.98px) {
+  .torre {
+    align-self: stretch;
+    justify-self: start;
+    width: auto;
+    aspect-ratio: 400 / 1600;
+    margin-top: 0;
+  }
+  .torre :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+}
+@media (max-width: 639.98px) {
+  .cifras {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* el halo de la torre es un botón (encima de su dibujo; viaja con la torre) */
+.halo {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.halo:focus-visible {
+  outline: 2px solid var(--color-ambar);
+  outline-offset: 4px;
+}
+
+/* La tira de láminas: se enciman un poco, inclinadas; la que se señala o enfoca pasa al frente. */
+.tira {
+  margin-top: clamp(32px, 6svh, 72px);
+}
+.tira :global([data-pista]) {
+  padding-block: 18px;
+}
+.tira li {
+  position: relative;
+  rotate: -1.5deg;
+  transition:
+    rotate 0.7s var(--resorte-c),
+    scale 0.7s var(--resorte-c);
+}
+.tira li:nth-child(even) {
+  rotate: 1.5deg;
+}
+.tira li:hover,
+.tira li:focus-within {
+  z-index: 2;
+  rotate: 0deg;
+  scale: 1.05;
+}
+
+/* ── Escritorio ────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .escena {
+    --col: 26vw;
+    --ancho-aurelion: min(44vw, 84svh);
+    --ancho-la-torre: min(11vw, 24svh);
+    --x-aurelion: calc(var(--relleno) + var(--col) + 2.5vw);
+    /* torre entera dentro del tablero (sin movimiento): una pantalla de alto */
+    --ancho-torre: 23.5svh;
+  }
+  .subida {
+    height: 180svh;
+  }
+  .tablero {
+    position: sticky;
+    top: 0;
+    display: block;
+    height: 100svh;
+    overflow: clip;
+  }
+  /* detrás del título y nada más (no del resumen) */
+  .escena .numero {
+    top: max(64px, 7svh);
+    left: var(--relleno);
+    font-size: min(15vw, 13rem);
+  }
+  .texto {
+    position: absolute;
+    top: clamp(56px, 10svh, 120px);
+    left: 0;
+    width: calc(var(--col) + var(--relleno));
+    padding-inline-start: var(--relleno);
+  }
+  .titulo {
+    font-size: clamp(2rem, 2.9vw, 3.4rem);
+  }
+  .valor {
+    font-size: clamp(3.5rem, 6.4vw, 7.5rem);
+  }
+  .aurelion,
+  .laTorre {
+    position: absolute;
+  }
+  .aurelion {
+    z-index: 3;
+    left: var(--x-aurelion);
+    top: calc((100svh - var(--ancho-aurelion)) / 2 - 3svh);
+  }
+  /* la torre real, en la esquina de abajo a la izquierda de Aurelion (la de la derecha es de su botón de pausa) */
+  .tablero .laTorre {
+    z-index: 4;
+    width: var(--ancho-la-torre);
+    left: calc(var(--x-aurelion) + 1.5vw);
+    bottom: 3svh;
+  }
+  .torre {
+    position: absolute;
+    top: 2svh;
+    right: 7vw;
+    width: var(--ancho-torre);
+    margin: 0;
+  }
+  .nube {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+  }
+  .nubeLejos1 {
+    z-index: 0;
+    top: 22%;
+    right: 2vw;
+    width: 14vw;
+  }
+  .nubeLejos2 {
+    z-index: 0;
+    top: 64%;
+    right: 20vw;
+    width: 11vw;
+  }
+  .nubeCerca {
+    z-index: 2;
+    top: 48%;
+    right: -5vw;
+    width: 22vw;
+  }
+  .banco {
+    display: none;
+  }
+  /* con movimiento la torre mide dos pantallas y la cámara trepa por ella (vivos-c.tsx la desplaza) */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.mueve) .torre {
+      top: 0;
+      right: -2vw;
+      width: min(30vw, 50svh);
+    }
+    :global(html.mueve) .banco {
+      display: block;
+      z-index: 2;
+      bottom: -3svh;
+      right: -6vw;
+      width: 40vw;
+    }
+  }
+  /* por la izquierda deja libre el carril de la línea viva (la tira recorta lo que pasa) */
+  .tira {
+    margin-top: clamp(40px, 8svh, 96px);
+    margin-left: max(72px, 5vw);
+  }
+  .tira li {
+    margin-inline-end: -2.5vw;
+  }
+}

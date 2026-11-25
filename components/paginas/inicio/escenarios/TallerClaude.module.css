@@ -1,0 +1,208 @@
+/* Escenario 5 · taller-claude. Celular y tableta: apilado dentro del relleno (texto, diagrama, mesa recortada arriba).
+   Escritorio: el texto arriba a la izquierda y el diagrama arriba a la derecha; la mesa de los seis en una ventana
+   pegada a la base, de orilla a orilla, con el dibujo a 124vw (desde −8vw): el tablero y el banco se salen por las dos
+   orillas y por abajo (la línea
+   viva la cruza por detrás: `data-linea="detras"`; los agentes, que son botones, sí los esquiva). */
+.escena {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.numero {
+  top: clamp(8px, 2svh, 24px);
+  left: auto;
+  right: var(--relleno);
+}
+.arriba {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.titulo {
+  font-size: clamp(2rem, 4.4vw, 4.25rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 90;
+  overflow-wrap: anywhere;
+  color: var(--color-hueso);
+}
+.resumen {
+  margin-top: 1rem;
+  color: var(--color-hueso-apagado);
+  font-size: 1.125rem;
+}
+.pildoras {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.boton {
+  margin-top: 1.75rem;
+}
+.diagrama {
+  margin: 0 var(--relleno);
+}
+.rotulo {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--color-hueso-apagado);
+}
+
+/* La mesa: en celular, a todo el ancho del relleno y sin la parte vacía de arriba del lienzo. */
+.mesa {
+  position: relative;
+  margin: 0 var(--relleno);
+  overflow: clip;
+}
+.mesaLienzo {
+  margin-top: -22%;
+}
+.lienzo {
+  position: relative;
+}
+/* sin la foto con cinta: la prueba es el diagrama y el repo */
+.lienzo :global([data-g="foto"]),
+.lienzo :global([data-g="sombra-foto"]) {
+  display: none;
+}
+
+/* Cada agente es un botón encima de su dibujo; su etiqueta (papel · modelo) es su nombre accesible. */
+.agente {
+  position: absolute;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  cursor: pointer;
+}
+.agente:focus-visible,
+.batuta:focus-visible {
+  outline: 2px solid var(--color-ambar);
+  outline-offset: 2px;
+}
+.etiqueta {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  z-index: 3;
+  padding: 6px 12px;
+  border: 1.5px solid var(--color-ambar);
+  border-radius: 999px;
+  background: var(--color-noche);
+  color: var(--color-hueso);
+  font-family: var(--letra-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  translate: -50% 6px;
+  /* transparente hasta que se enseña (sigue siendo el nombre accesible del botón): la línea viva no cuenta como texto
+     el de un dibujo «detrás» con opacidad 0, y pasa entre los agentes */
+  transition:
+    opacity var(--dur-micro) ease,
+    translate var(--dur-ui) cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.modelo {
+  color: var(--color-ambar);
+}
+.agente:hover .etiqueta,
+.agente:focus-visible .etiqueta,
+.agente[data-activo] .etiqueta {
+  opacity: 1;
+  translate: -50% 0;
+}
+/* las de las orillas no se salen de la mesa */
+.agente:first-of-type .etiqueta {
+  left: 0;
+  translate: 0 6px;
+}
+.agente:first-of-type:hover .etiqueta,
+.agente:first-of-type:focus-visible .etiqueta,
+.agente:first-of-type[data-activo] .etiqueta {
+  translate: 0 0;
+}
+.batuta {
+  position: absolute;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  /* `section.` para ganarle al `padding-block` de escenario.module.css (si no, la mesa se subía encima del texto) */
+  section.escena {
+    --alto-lienzo: calc(124vw * 420 / 640);
+    display: block;
+    /* lo que ocupa la mesa debajo del texto: de la cabeza de los agentes (al 41 % del lienzo sobre la base) a la base,
+       más un paso por encima de las cabezas por donde la línea viva cruza hacia el hueco junto al primer agente */
+    padding-bottom: calc(var(--alto-lienzo) * 0.48 + 24px);
+  }
+  .numero {
+    top: clamp(16px, 3svh, 40px);
+    left: var(--relleno);
+    right: auto;
+  }
+  .arriba {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, calc(22rem + 2 * var(--relleno))) minmax(0, 1fr);
+    align-items: start;
+    gap: 0;
+  }
+  .texto {
+    padding-top: clamp(40px, 7svh, 96px);
+  }
+  /* el diagrama: composición vertical (30vw) hasta que caben los 880 px de la horizontal (letra de 12 px reales) */
+  .diagrama {
+    justify-self: end;
+    width: 30vw;
+    margin: clamp(24px, 4svh, 56px) 9vw 0 2vw;
+    padding: 10px 0 8px;
+    border: 1px solid var(--color-linea);
+    border-radius: 10px;
+    background: var(--color-noche);
+  }
+  .diagrama .rotulo {
+    padding-inline: 16px;
+  }
+  /* La ventana de la mesa: pegada a la base, de orilla a orilla. */
+  .mesa {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--alto-lienzo) * 0.7);
+    margin: 0;
+  }
+  .mesaLienzo {
+    position: absolute;
+    left: -8vw;
+    bottom: calc(var(--alto-lienzo) * -0.05);
+    width: 124vw;
+    margin: 0;
+  }
+  .etiqueta {
+    font-size: 0.8125rem;
+  }
+  /* El primer agente sale cortado por la orilla izquierda: su zona de toque se queda en lo que se ve de él (55 de
+     76 unidades del lienzo) y entre él y el segundo queda un paso de ≥ 60 px por donde la línea viva cruza la fila
+     (los botones son duros; entre los demás solo hay 28 px). */
+  .agente:first-of-type {
+    max-width: calc(55% / 6.4);
+  }
+}
+@media (min-width: 1400px) {
+  .diagrama {
+    width: 882px;
+  }
+}

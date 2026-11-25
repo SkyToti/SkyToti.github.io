@@ -1,0 +1,108 @@
+/* 4 · «La prueba»: la banda de cifras de orilla a orilla (bordes de pared a pared) y el párrafo. */
+.prueba {
+  --relleno: clamp(20px, 4vw, 72px);
+  border-top: 1px solid var(--color-linea);
+}
+.titulo {
+  padding-inline: var(--relleno);
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  font-variation-settings: "wdth" 88;
+  color: var(--color-hueso);
+}
+.banda {
+  display: grid;
+  grid-template-columns: repeat(min(var(--n), 2), minmax(0, 1fr));
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+  border-block: 1px solid var(--color-linea-viva);
+}
+.cifra {
+  display: flex;
+  flex-direction: column;
+  padding: 28px var(--relleno) 32px;
+  border-bottom: 1px solid var(--color-linea);
+}
+.cifra:nth-child(odd) {
+  border-right: 1px solid var(--color-linea);
+}
+.cota {
+  position: relative;
+  display: block;
+  height: 12px;
+  margin-bottom: 18px;
+  border-inline: 1.5px solid var(--color-linea-viva);
+}
+.cota span {
+  position: absolute;
+  inset: 50% 0 auto;
+  border-top: 1.5px solid var(--color-linea-viva);
+}
+.valor {
+  font-family: var(--letra-mono);
+  font-size: min(var(--tamano-chico), 4.5rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-hueso);
+  white-space: nowrap;
+}
+.etiqueta {
+  margin-top: 14px;
+  max-width: 28ch;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--color-hueso-apagado);
+}
+.prosa {
+  margin-top: 40px;
+  padding-inline: var(--relleno);
+  max-width: calc(44rem + 2 * var(--relleno));
+  font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--color-hueso);
+}
+
+@media (min-width: 1024px) {
+  .prueba {
+    --relleno: max(52px, 4vw);
+    padding-block: 12svh;
+  }
+  .banda {
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    margin-top: 7svh;
+  }
+  .cifra {
+    padding: 4svh 2vw 5svh;
+    border-bottom: 0;
+  }
+  .cifra:first-child {
+    padding-left: var(--relleno);
+  }
+  .cifra:last-child {
+    padding-right: var(--relleno);
+  }
+  .cifra:nth-child(odd) {
+    border-right: 0;
+  }
+  .cifra + .cifra {
+    border-left: 1px solid var(--color-linea);
+  }
+  .valor {
+    font-size: var(--tamano);
+  }
+  .etiqueta {
+    font-size: 1.125rem;
+  }
+  /* el párrafo, corrido a la derecha: no repite la columna del título */
+  .prosa {
+    margin: 7svh 0 0 auto;
+    padding-right: var(--relleno);
+    padding-left: 0;
+    max-width: calc(46rem + var(--relleno));
+  }
+}

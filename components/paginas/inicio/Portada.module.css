@@ -1,0 +1,215 @@
+/* Portada a todo lo ancho (Portada.tsx). Escritorio (≥ 1024): rejilla de tres filas —
+     1 · el nombre (y su subrayado)      2 · titular, frase y botones      3 · lo que sobre de pared
+   — y el escritorio de noche ocupa las filas 2 y 3, pegado abajo, de orilla a orilla (la sección recorta lo que sangra).
+   Medidas del dibujo ancho (dibujo/piezas/escritorio.mjs): 16 u = 1vw; alto 33vw; la cubierta queda a 10.375vw del piso;
+   la mesa va de −3vw a 75vw, la cajonera de 80vw a 103vw y el hueco de la línea viva de 75vw a 80vw (centro 77.5vw). */
+.portada {
+  --relleno: clamp(20px, 4vw, 72px);
+  --tam: clamp(3.25rem, 19vw, 7.5rem);
+  position: relative;
+  overflow: clip;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100svh;
+  padding-top: 3.5rem; /* la cabecera fija */
+}
+
+.cabeza {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1.25rem, 4svh, 2.75rem) var(--relleno) 0;
+}
+.nombre {
+  margin-top: 0.75rem;
+  width: min-content; /* «Diego» / «Benítez»: se parte entre palabras, nunca dentro de una */
+  max-width: 100%;
+  color: var(--color-hueso);
+  font-size: var(--tam);
+  font-weight: 700;
+  font-variation-settings: "wdth" 90;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  overflow-wrap: normal;
+}
+/* La entrada del nombre (antes SplitText de GSAP con `data-lineas="ya"`): cada renglón sube desde debajo de su
+   máscara, 0.9 s en expo.out y 0.08 s entre renglones. CSS puro, desde el primer cuadro: el nombre es el LCP. La
+   máscara (clip-path) solo existe mientras dura la entrada; deja pasar los acentos de arriba y recorta abajo, en la
+   línea del renglón (igual que la máscara de SplitText). Sin `mueve` (menos movimiento, sin JS) no hay entrada. */
+.renglon,
+.renglon > span {
+  display: inline-block;
+}
+:global(html.mueve) .renglon {
+  animation: mascara-nombre 0.9s linear backwards;
+  animation-delay: calc(var(--i, 0) * 0.08s);
+}
+:global(html.mueve) .renglon > span {
+  animation: sube-nombre 0.9s cubic-bezier(0.19, 1, 0.22, 1) backwards;
+  animation-delay: inherit;
+}
+@keyframes mascara-nombre {
+  from,
+  to {
+    clip-path: inset(-0.6em -0.3em 0 -0.3em);
+  }
+}
+@keyframes sube-nombre {
+  from {
+    transform: translateY(120%);
+  }
+}
+/* El subrayado: bajo la caja de las letras del nombre (con interlineado 0.88 la caja del texto se sale ~0.16em de la
+   línea) y a media distancia del titular: la línea viva nunca roza el nombre. */
+.cabeza .subrayado {
+  --bajo: calc(12px + var(--tam) * 0.2);
+}
+
+.texto {
+  position: relative;
+  z-index: 1;
+  padding: 0 var(--relleno);
+  padding-top: calc(12px + var(--tam) * 0.2 + 1.25rem);
+}
+.titular {
+  max-width: 30ch;
+  color: var(--color-hueso);
+  font-size: clamp(1.25rem, 2.1vw, 1.75rem);
+  font-weight: 560;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.frase {
+  margin-top: 0.75rem;
+  max-width: 40ch;
+  color: var(--color-hueso-apagado);
+  font-size: clamp(1rem, 1.25vw, 1.1875rem);
+  line-height: 1.5;
+}
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* La escena: en celular y tableta, la composición vertical debajo del texto. */
+.escena {
+  position: relative;
+  padding: 2.25rem var(--relleno) 3rem;
+}
+.mesa,
+.cajonera,
+.ventana {
+  display: none;
+}
+.chico {
+  max-width: 460px;
+  margin-inline: auto;
+}
+/* La línea viva baja por el margen y hace su rizo arriba a la izquierda del dibujo. */
+[data-ancla].anclaMesa {
+  top: 1rem;
+  left: calc(var(--relleno) + 8px);
+}
+
+/* Haku salta del escritorio al piso (HakuDelInicio.tsx): el de la mesa se esconde mientras el guía anda abajo (al
+   instante: nunca se ven los dos). */
+:global(html[data-haku-guia="abajo"]) .escena :global([data-g^="haku-"]),
+:global(html[data-haku-guia="abajo"]) .cajonera :global([data-g="rotulos"]) {
+  opacity: 0;
+}
+/* al volver arriba, el de la mesa reaparece con su fundido de tres pasos (el guía ya se escondió) */
+:global(html.mueve[data-haku-guia="arriba"]) .escena :global([data-g^="haku-"]),
+:global(html.mueve[data-haku-guia="arriba"]) .cajonera :global([data-g="rotulos"]) {
+  transition: opacity 0.22s steps(3, end) 0.05s;
+}
+
+@media (min-width: 640px) {
+  .botones {
+    margin-top: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Cabe ENTERA en la ventana (1440×900, 1280×720…): el nombre no cambia; el escritorio se escala con el alto que
+     queda debajo del subrayado. --u = «1vw del dibujo» (16 u del lienzo): 1vw si cabe, menos si la ventana es baja.
+     --arriba = dónde empieza el dibujo: cabecera + aire + rótulo + nombre (2 renglones × 0.88) + subrayado + aire. */
+  .portada {
+    --tam: clamp(7rem, 12.5vw, 14vw);
+    --arriba: calc(3.5rem + clamp(0.75rem, 2svh, 1.75rem) + 1.9rem + var(--tam) * 1.96 + 12px + 1.5rem);
+    --u: min(1vw, calc((100svh - var(--arriba)) / 33));
+    /* de derecha a izquierda: la cajonera pegada a la orilla, el hueco de 5u (por ahí baja la línea) y la mesa de 78u,
+       que sale por la izquierda si sobra dibujo; si la ventana es baja, la mesa empieza después del texto */
+    --hueco: calc(100vw - 25 * var(--u));
+    grid-template-rows: auto auto minmax(0, 1fr);
+    height: 100svh;
+    min-height: 34rem;
+  }
+  .cabeza {
+    grid-row: 1;
+    padding-top: clamp(0.75rem, 2svh, 1.75rem);
+  }
+  /* El subrayado corre del nombre hasta el hueco entre la mesa y la cajonera (77.5vw). */
+  .cabeza .subrayado {
+    width: calc(var(--hueco) - var(--relleno));
+  }
+  .texto {
+    grid-row: 2;
+    grid-column: 1;
+    align-self: start;
+    max-width: calc(36rem + 2 * var(--relleno));
+  }
+  .titular {
+    max-width: 32ch;
+  }
+  .escena {
+    grid-row: 2 / 4;
+    grid-column: 1;
+    align-self: end;
+    height: calc(33 * var(--u));
+    /* nunca más arriba que el subrayado: la línea corre por encima del dibujo */
+    margin-top: calc(12px + var(--tam) * 0.2 + 1.5rem);
+    padding: 0;
+  }
+  .chico {
+    display: none;
+  }
+  .mesa,
+  .cajonera {
+    display: block;
+    position: absolute;
+    bottom: 0;
+  }
+  .mesa {
+    left: calc(100vw - 105.5 * var(--u));
+    width: calc(78 * var(--u));
+  }
+  /* la cajonera, pegada a la orilla derecha y con la lámpara entera (su base acaba al 92 % del dibujo) */
+  .cajonera {
+    right: calc(-0.5 * var(--u));
+    width: calc(23 * var(--u));
+  }
+  /* «ver de nuevo»: uno solo, el de la cajonera (repite los tres dibujos; los otros dos quedan escondidos) */
+  .mesa :global(button:not([data-lampara])),
+  .ventana :global(button:not([data-lampara])) {
+    display: none;
+  }
+  .cajonera :global(button:not([data-lampara])) {
+    position: absolute;
+    right: calc(2.5 * var(--u) + 14px);
+    bottom: 10px;
+    margin: 0;
+  }
+  [data-ancla].anclaMesa {
+    top: auto;
+    left: var(--hueco);
+    bottom: calc(10.375 * var(--u));
+  }
+  .ventana {
+    display: block;
+    position: absolute;
+    top: calc(3.5rem + 2.5vw);
+    right: 5vw;
+    width: 15vw;
+  }
+}

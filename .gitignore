@@ -1,0 +1,24 @@
+# dependencias y salidas
+node_modules/
+.next/
+out/
+capturas/
+recorrido/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# entorno
+.env*
+!.env.example
+
+# sistema
+.DS_Store
+*.log
+
+# copias de trabajo de los agentes
+.claude/worktrees/
+
+# reglas que genera Next para agentes
+AGENTS.md

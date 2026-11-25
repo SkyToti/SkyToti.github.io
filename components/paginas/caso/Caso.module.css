@@ -1,0 +1,46 @@
+/* La página de caso (components/paginas/Caso.tsx): el marco general y la banda de la demo interactiva. */
+.caso {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+/* La demo: una banda de orilla a orilla, con el botón GRANDE. */
+.demo {
+  --relleno: clamp(20px, 4vw, 72px);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 48px var(--relleno);
+  border-block: 1px solid var(--color-ambar);
+}
+.demoTitulo {
+  font-size: clamp(2rem, 4.6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 88;
+  color: var(--color-ambar);
+}
+.demoFrase {
+  margin-top: 1rem;
+  max-width: 40rem;
+  font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+  line-height: 1.45;
+  color: var(--color-hueso);
+}
+.demoBoton {
+  min-height: 64px;
+  padding-inline: 1.75rem;
+  font-size: 1.1875rem;
+}
+@media (min-width: 1024px) {
+  .demo {
+    --relleno: max(52px, 4vw);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6vw;
+    padding-block: 9svh;
+  }
+}

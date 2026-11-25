@@ -1,0 +1,588 @@
+/* ── Pantallas del bloque D (BRIEF-4 §4.D): pacientes, laboratorio y Imagen Dental ── */
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* el botón del detalle del que crece su pantalla completa */
+.detalle-pantalla {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: var(--r-control);
+  background: #fff;
+  color: var(--tinta);
+  font-size: 15px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.detalle-pantalla:focus-visible {
+  outline: 2px solid var(--lima);
+  outline-offset: 2px;
+}
+.detalle[data-tinta="oscura"] .detalle-pantalla {
+  box-shadow: inset 0 0 0 1px rgba(42, 37, 33, 0.25);
+}
+
+/* pacientes: la lista a la izquierda, la ficha a la derecha */
+.pac-cuerpo {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: 18px;
+  min-height: 0;
+}
+.pac-lista-col {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 10px;
+  min-height: 0;
+}
+.pac-buscar input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--r-control);
+  background: #fff;
+  color: var(--tinta);
+  font: inherit;
+  font-size: 15px;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.16);
+}
+.pac-buscar input:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 1px;
+}
+.pac-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pac-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0 4px 0 0;
+  display: grid;
+  align-content: start;
+  gap: 0;
+  overflow-y: auto;
+  min-height: 0;
+}
+/* una lista de renglones sobre línea fina (no una tarjeta por paciente) */
+.pac-fila {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 0;
+  text-align: left;
+  color: var(--tinta);
+  background: transparent;
+  box-shadow: inset 0 -1px 0 rgba(24, 25, 25, 0.1);
+  transition: background-color 0.2s;
+}
+.pac-fila:hover {
+  background: rgba(24, 25, 25, 0.045);
+}
+.pac-fila:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: -2px;
+}
+.pac-fila[aria-pressed="true"] {
+  background: var(--tinta);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: none;
+}
+.pac-fila[aria-pressed="true"] .pac-fila-meta,
+.pac-fila[aria-pressed="true"] .pac-fila-proxima {
+  color: rgba(255, 255, 255, 0.86);
+}
+.pac-fila-nombre {
+  font-size: 15.5px;
+  font-weight: 500;
+}
+.pac-fila-meta,
+.pac-fila-proxima {
+  font-size: 13px;
+  color: var(--tinta-2);
+}
+.pac-vacio {
+  padding: 14px 4px;
+  font-size: 14px;
+  color: var(--tinta-2);
+}
+.pac-ficha {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px 26px;
+  border-radius: 14px;
+  background: #fcfbf8;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.07);
+}
+.pac-ficha-vacia {
+  place-items: center;
+  align-content: center;
+  color: var(--tinta-2);
+  font-size: 16px;
+}
+.pac-ficha-cabeza {
+  display: grid;
+  gap: 6px;
+}
+/* su unidad: un punto de su color antes de la línea de datos (como en Imagen Dental), no una raya de lado */
+.pac-meta::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--pac, var(--tinta));
+  vertical-align: 0;
+}
+.pac-nombre {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.pac-meta {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--tinta-2);
+}
+.pac-seccion {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+/* sigue a este paciente: sus estaciones por tus unidades, sobre una línea fina */
+.pac-estaciones {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+.pac-estaciones::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 6px;
+  height: 1px;
+  background: rgba(24, 25, 25, 0.25);
+}
+.pac-estacion {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  min-width: 96px;
+  padding-right: 12px;
+}
+.pac-estacion-punto {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px #fcfbf8;
+}
+.pac-estacion[data-ahora] .pac-estacion-punto {
+  box-shadow: 0 0 0 3px #fcfbf8, 0 0 0 5px var(--lima), 0 0 0 6px #a8ba0e;
+}
+.pac-estacion-u {
+  font-size: 14px;
+}
+.pac-estacion-f {
+  font-size: 12.5px;
+  color: var(--tinta-2);
+}
+/* su historia: una línea vertical con un punto por momento */
+.pac-eventos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+.pac-evento {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px 16px minmax(0, 1fr);
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 14.5px;
+}
+.pac-evento::before {
+  content: "";
+  position: absolute;
+  left: calc(58px + 8px + 7.5px);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(24, 25, 25, 0.18);
+}
+.pac-evento-f {
+  font-size: 13px;
+  color: var(--tinta-2);
+  text-align: right;
+  padding-top: 1px;
+}
+.pac-evento-punto {
+  position: relative;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  margin: 5px 0 0 3.5px;
+  border-radius: 50%;
+  background: #fcfbf8;
+  box-shadow: inset 0 0 0 1.5px var(--tinta);
+}
+.pac-evento[data-hecho] .pac-evento-punto {
+  background: #7a8286;
+  box-shadow: none;
+}
+.pac-evento[data-proximo] .pac-evento-punto {
+  width: 11px;
+  height: 11px;
+  margin: 4px 0 0 2.5px;
+  background: var(--lima);
+  box-shadow: 0 0 0 1px #a8ba0e;
+}
+.pac-evento-tipo {
+  font-weight: 500;
+}
+.pac-evento-u {
+  color: var(--tinta-2);
+}
+.pac-volver {
+  justify-self: start;
+}
+
+/* el tablero del laboratorio */
+.tab-columnas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  min-height: 0;
+}
+.tab-columna {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+  min-height: 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: #ecebe6;
+}
+.tab-cabeza {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.tab-nombre {
+  font-size: 15px;
+}
+.tab-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.tab-tarjeta {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  padding: 12px 12px 10px;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--tinta);
+  box-shadow: 0 1px 2px rgba(24, 25, 25, 0.06);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tab-tarjeta:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}
+/* al arrastrar: la tarjeta se queda como hueco y una copia sigue al dedo, por encima de todo (las listas recortan) */
+.tab-tarjeta[data-arrastrando] {
+  opacity: 0.35;
+}
+.tab-copia {
+  position: fixed;
+  z-index: 80;
+  margin: 0;
+  pointer-events: none;
+  cursor: grabbing;
+  rotate: 1.5deg;
+  box-shadow: 0 22px 44px -18px rgba(24, 25, 25, 0.55);
+}
+.tab-columna[data-destino] {
+  background: #e3e6d2;
+  box-shadow: inset 0 0 0 2px #a8ba0e;
+}
+.tab-trabajo {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+.tab-pieza {
+  font-weight: 400;
+}
+.tab-quien {
+  margin: 0;
+  font-size: 14px;
+}
+.tab-meta {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--tinta-2);
+}
+.tab-mover {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 4px;
+}
+.tab-mover button {
+  min-width: 40px;
+  min-height: 36px;
+  border-radius: 8px;
+  font-size: 17px;
+  color: var(--tinta);
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.18);
+}
+.tab-mover button:disabled {
+  opacity: 0.35;
+}
+.tab-mover button:not(:disabled):hover {
+  background: #ececec;
+}
+.tab-vacio {
+  padding: 10px 2px;
+  font-size: 13.5px;
+  color: var(--tinta-2);
+}
+
+/* la bandeja de Imagen Dental */
+.ban-cuerpo {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 14px;
+  min-height: 0;
+}
+.ban-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  align-content: start;
+  gap: 0;
+  overflow-y: auto;
+  min-height: 0;
+}
+.ban-fila {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 6px;
+  box-shadow: inset 0 -1px 0 rgba(24, 25, 25, 0.1);
+}
+.ban-punto {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 7px;
+  border-radius: 50%;
+  vertical-align: 1px;
+}
+.ban-hora {
+  font-size: 1.35rem;
+  font-weight: 300;
+}
+.ban-texto {
+  display: grid;
+  gap: 2px;
+}
+.ban-tipo {
+  font-size: 15.5px;
+  font-weight: 500;
+}
+.ban-quien {
+  font-size: 13.5px;
+  color: var(--tinta-2);
+}
+.ban-estado {
+  font-size: 13.5px;
+  color: var(--tinta-2);
+}
+.ban-fila[data-estado-estudio="Por revisar"] .ban-estado {
+  color: var(--tinta);
+}
+
+/* en el teléfono: una columna */
+.pantalla[data-telefono] .pac-cuerpo {
+  grid-template-columns: minmax(0, 1fr);
+}
+.pantalla[data-telefono] .pac-lista-col[data-oculta] {
+  display: none;
+}
+.pantalla[data-telefono] .pac-ficha {
+  padding: 18px 16px;
+}
+/* en el teléfono, las columnas se recorren de lado (una a la vez) y la tarjeta se mueve con ‹ › */
+.pantalla[data-telefono] .tab-columnas {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: 84%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  padding-bottom: 4px;
+}
+.pantalla[data-telefono] .tab-columna {
+  scroll-snap-align: start;
+}
+.pantalla[data-telefono] .tab-mover button {
+  min-width: 48px;
+  min-height: 44px;
+}
+.pantalla[data-telefono] .agenda-resumen {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+.pantalla[data-telefono] .ban-fila {
+  grid-template-columns: 48px minmax(0, 1fr);
+}
+.pantalla[data-telefono] .ban-fila .ban-estado,
+.pantalla[data-telefono] .ban-fila .agenda-accion {
+  grid-column: 2;
+  justify-self: start;
+}
+
+/* «Nueva unidad»: una hoja sobre toda la app (no tiene un origen a la vista: entra con un fundido) */
+.hoja-app {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+}
+.hoja-app > .agenda-velo {
+  inset: 0;
+}
+.hoja-app > .agenda-ficha {
+  left: max(20px, calc(50% - 230px));
+  right: max(20px, calc(50% - 230px));
+  top: 14%;
+}
+.hoja-app[data-telefono] > .agenda-ficha {
+  left: 0;
+  right: 0;
+  top: auto;
+  bottom: 0;
+  border-radius: 18px 18px 0 0;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nueva-unidad-titulo {
+  margin: 0 0 4px;
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+.nueva-unidad-error {
+  margin: 0;
+  font-size: 13.5px;
+  color: #9a3412;
+}
+.nueva-unidad input[aria-invalid] {
+  box-shadow: inset 0 0 0 1.5px #9a3412;
+}
+.nueva-unidad-grupo {
+  margin: 8px 0 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.nueva-unidad-grupo legend {
+  padding: 0;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  color: var(--tinta-2);
+}
+.nueva-unidad-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+/* una opción es un control con su propio radio escondido: el foco se ve en la etiqueta */
+.nueva-unidad-opcion {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  min-width: 48px;
+  justify-content: center;
+  padding: 0 16px;
+  border-radius: var(--r-control);
+  background: #f1f0ec;
+  color: var(--tinta);
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.14);
+}
+.nueva-unidad-opcion input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.nueva-unidad-opcion[data-elegida] {
+  background: var(--tinta);
+  color: #fff;
+  box-shadow: none;
+}
+.nueva-unidad-opcion:has(input:focus-visible) {
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}
+
+/* el aviso de la app (una unidad creada): el mismo de la agenda, fijo abajo */
+.agenda-aviso.aviso-app {
+  position: fixed;
+  z-index: 60;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+/* la última opción del selector: crear una unidad */
+.selector-nueva {
+  margin-top: 4px;
+  border-top: 1px solid rgba(24, 25, 25, 0.1);
+  border-radius: 0 0 9px 9px;
+}
+.selector-nueva .selector-nombre::before {
+  content: "+";
+  position: absolute;
+  left: 11px;
+  top: 7px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+}

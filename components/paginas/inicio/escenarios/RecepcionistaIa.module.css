@@ -1,0 +1,152 @@
+/* Escenario 1 · Recepcionista con IA. Celular y tableta: apilado (texto, teléfono, conmutador). Escritorio: una
+   pantalla de 100svh con todo colocado; las orillas izquierda y derecha quedan libres para la línea viva. */
+.escena {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.escena .numero {
+  left: auto;
+  right: var(--relleno);
+}
+.titulo {
+  font-size: clamp(2rem, 3.9vw, 3.75rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 90;
+  text-wrap: balance;
+  color: var(--color-hueso);
+}
+.resumen {
+  margin-top: 1rem;
+  color: var(--color-hueso-apagado);
+  font-size: 1.125rem;
+}
+.pildoras {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.boton {
+  margin-top: 1.75rem;
+}
+.luna,
+.anuncio {
+  display: none;
+}
+/* el teléfono no pasa de 78svh de alto en ninguna pantalla */
+.telefono {
+  width: 100%;
+  max-width: calc((78svh - 33px) * 0.4623 + 19px + 2 * var(--relleno));
+  margin-inline: auto;
+}
+/* El conmutador va sin foto (la prueba es el teléfono grande): fuera su hueco con cinta. Y sin su cielo: la luna de
+   la pantalla es la de arriba. */
+.conmutador :global([data-g="cielo"]),
+.conmutador :global([data-g="foto"]),
+.conmutador :global([data-g="sombra-foto"]),
+.conmutador :global([data-g="foto-sombra"]) {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  section.escena {
+    --relleno: max(52px, 4vw);
+    display: block;
+    height: 100svh;
+    min-height: 600px;
+    padding: 0;
+  }
+  /* «01» enorme detrás del título */
+  .escena .numero {
+    top: 11svh;
+    left: var(--relleno);
+    right: auto;
+    font-size: min(17vw, 27svh);
+  }
+  .escena .texto {
+    position: absolute;
+    z-index: 2;
+    top: 17svh;
+    left: 0;
+  }
+  .telefono {
+    position: absolute;
+    z-index: 2;
+    top: 13svh;
+    left: 53vw;
+    width: auto;
+    max-width: none;
+    margin: 0;
+  }
+  .anuncio {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 30svh;
+    left: 71vw;
+  }
+  .conmutador {
+    z-index: 1;
+  }
+  .luna {
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 12svh;
+    left: 41vw;
+    width: clamp(72px, 7vw, 120px);
+    height: auto;
+    overflow: visible;
+  }
+}
+
+/* La luna: trazo de pluma, sin degradados. Con movimiento se dibuja cuando llega la estación. */
+.halo {
+  fill: none;
+  stroke: var(--color-linea-viva);
+  stroke-width: 1.5;
+}
+.creciente {
+  fill: var(--color-hueso);
+  stroke: var(--color-hueso);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.estrella {
+  fill: var(--color-ambar);
+}
+@media (prefers-reduced-motion: no-preference) {
+  :global(html.mueve) .creciente,
+  :global(html.mueve) .estrella {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    scale: 0.6;
+    rotate: -20deg;
+    transition:
+      opacity 0.6s ease,
+      scale 1s var(--curva-entrada, cubic-bezier(0.16, 1, 0.3, 1)),
+      rotate 1.2s var(--curva-entrada, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+  :global(html.mueve) .estrella {
+    transition-delay: 0.5s;
+  }
+  :global(html.mueve) .halo {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.6s ease-out 0.2s;
+  }
+  :global(html.mueve) .escena:global(.llego) .creciente,
+  :global(html.mueve) .escena:global(.llego) .estrella {
+    opacity: 1;
+    scale: 1;
+    rotate: 0deg;
+  }
+  :global(html.mueve) .escena:global(.llego) .halo {
+    stroke-dashoffset: 0;
+  }
+}

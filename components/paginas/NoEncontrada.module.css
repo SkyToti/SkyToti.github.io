@@ -1,0 +1,151 @@
+/* La 404 (components/paginas/NoEncontrada.tsx). Colores y letra de DIRECCION.md §2. */
+
+/* Idioma: el español por omisión; con html.en (ruta /en/…), el inglés. */
+.pagina [data-l="en"] {
+  display: none;
+}
+:global(html.en) .pagina [data-l="es"] {
+  display: none;
+}
+:global(html.en) .pagina [data-l="en"] {
+  display: var(--mostrar, inline);
+}
+
+.pagina {
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  gap: clamp(20px, 4vw, 56px);
+  padding: clamp(28px, 6vw, 72px) clamp(20px, 4vw, 72px);
+  background: #0b1220;
+  color: #ede6d6;
+  font-family: var(--letra-texto, system-ui, sans-serif);
+  overflow-x: clip;
+}
+@media (min-width: 960px) {
+  .pagina {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+}
+
+.texto {
+  max-width: 34rem;
+}
+
+.rotulo {
+  margin: 0 0 18px;
+  font: 500 13px/1 var(--letra-mono, ui-monospace, monospace);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #a7a698;
+}
+
+.titulo {
+  margin: 0;
+  font-size: clamp(2.6rem, 6.2vw, 5.4rem);
+  font-weight: 700;
+  font-stretch: 90%;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.haku {
+  margin: 22px 0 0;
+  font: 680 clamp(1.15rem, 1.8vw, 1.4rem) / 1.35 "Shantell Sans", var(--letra-texto, system-ui), sans-serif;
+  color: #f5b455;
+}
+.firma {
+  margin-left: 0.5em;
+  white-space: nowrap;
+  color: #a7a698;
+  font-weight: 600;
+}
+
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+.boton {
+  --mostrar: inline-flex;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1.5px solid #5b6f96;
+  border-radius: 6px;
+  color: #ede6d6;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.boton:hover {
+  border-color: #ede6d6;
+}
+.principal {
+  border-color: #f5b455;
+  background: #f5b455;
+  color: #0b1220;
+}
+.principal:hover {
+  border-color: #ede6d6;
+  background: #ede6d6;
+}
+.pagina a:focus-visible,
+.tocar:focus-visible {
+  outline: 2px solid #f5b455;
+  outline-offset: 3px;
+}
+
+.otro {
+  --mostrar: block;
+  margin: 28px 0 0;
+  font-size: 0.95rem;
+  color: #a7a698;
+}
+.otro a {
+  color: #ede6d6;
+  text-underline-offset: 3px;
+}
+
+.dibujo {
+  width: 100%;
+  max-width: 900px;
+  justify-self: center;
+}
+/* En celular el dibujo se sangra por los dos lados (el suelo sigue fuera de cuadro) para que Haku se vea grande. */
+@media (max-width: 959px) {
+  .dibujo {
+    width: 136%;
+    max-width: none;
+    margin-inline: -18%;
+  }
+}
+
+.escena {
+  position: relative;
+}
+/* Haku como botón: la caja de su dibujo (anclas de dibujo/piezas/no-encontrada.mjs, en % del lienzo 760×520). */
+.tocar {
+  position: absolute;
+  left: 37%;
+  top: 4%;
+  width: 32%;
+  height: 47%;
+  padding: 0;
+  border: 0;
+  border-radius: 40% 40% 12px 12px;
+  background: transparent;
+  cursor: pointer;
+}
+:global(html:not(.js)) .tocar {
+  display: none;
+}
+
+/* Con movimiento, el golpe en el suelo espera a que caiga la taza. */
+:global(html.mueve) .escena [data-g="golpe"] {
+  opacity: 0;
+}

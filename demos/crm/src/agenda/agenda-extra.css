@@ -1,0 +1,420 @@
+/* ── La agenda, bloque C (BRIEF-4 §4.C): navegar, filtrar, arrastrar, crear, choques, mes y teléfono ── */
+
+/* navegar por fecha */
+.agenda-navega {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.agenda-navega .agenda-fecha {
+  min-width: 13ch;
+  margin: 0 6px;
+  text-align: center;
+}
+.agenda-flecha,
+.agenda-hoy {
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: var(--r-control);
+  font-size: 20px;
+  color: var(--tinta);
+}
+.agenda-hoy {
+  margin-left: 6px;
+  padding: 0 14px;
+  font-size: 15px;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.22);
+}
+.agenda-hoy[data-hoy-activo] {
+  color: var(--tinta-2);
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.1);
+}
+.agenda-flecha:hover,
+.agenda-hoy:hover {
+  background: #ececec;
+}
+
+/* resaltar a un doctor */
+.agenda-doctores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+  align-self: center;
+}
+.agenda-doctor {
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 17px;
+  font-size: 13.5px;
+  color: var(--tinta);
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.18);
+}
+.agenda-doctor:hover {
+  background: #ececec;
+}
+.agenda-doctor[aria-pressed="true"] {
+  background: var(--tinta);
+  color: #fff;
+  box-shadow: none;
+}
+.agenda-lienzo[data-filtro] .agenda-cita[data-atenuada] {
+  opacity: 0.32;
+}
+
+/* arrastrar y mover */
+.agenda-carril {
+  cursor: cell;
+}
+.agenda-cita {
+  cursor: grab;
+  touch-action: none;
+}
+.agenda-cita[data-arrastrando] {
+  z-index: 6;
+  cursor: grabbing;
+  background: rgba(255, 255, 255, 0.26);
+  box-shadow: inset 0 0 0 1.5px #fff, 0 14px 30px -12px rgba(0, 0, 0, 0.55);
+}
+.agenda-cita[data-moviendo] {
+  z-index: 6;
+  outline: 1.5px dashed var(--lima);
+  outline-offset: 2px;
+}
+/* el choque va en ámbar (un aviso), nunca en el rojo clínico */
+.agenda-cita[data-choque] {
+  box-shadow: inset 0 0 0 2px #f2b544;
+  background: rgba(242, 181, 68, 0.2);
+}
+.agenda-cita[data-nueva]::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  bottom: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+.agenda-instruccion {
+  margin: 0;
+  justify-self: center;
+  padding: 8px 14px;
+  border-radius: var(--r-control);
+  background: var(--tinta);
+  color: #fff;
+  font-size: 14px;
+}
+/* sobre la nota al pie, no encima: su sombra la oscurecía (3.8:1, medido) */
+.agenda-aviso {
+  position: absolute;
+  left: 50%;
+  bottom: 60px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: min(640px, calc(100% - 40px));
+  margin-left: calc(-1 * min(320px, 50% - 20px));
+  padding: 10px 12px 10px 18px;
+  border-radius: 12px;
+  background: var(--tinta);
+  color: #fff;
+  font-size: 14.5px;
+  box-shadow: 0 12px 28px -18px rgba(0, 0, 0, 0.55);
+}
+/* el choque: un anillo ámbar alrededor del aviso y un punto antes del texto (no una raya de lado) */
+.agenda-aviso[data-choque] {
+  box-shadow: inset 0 0 0 1.5px #f2b544, 0 12px 28px -18px rgba(0, 0, 0, 0.55);
+}
+.agenda-aviso[data-choque] .agenda-aviso-texto::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #f2b544;
+  vertical-align: 1px;
+}
+.agenda-aviso-texto {
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+/* el aviso único: la primera vez que algo cambia, una línea más, discreta */
+.agenda-aviso-recarga {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.agenda-aviso-deshacer {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-control);
+  background: var(--lima);
+  color: var(--tinta);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* la ficha: centrada en la agenda (antes vivía dentro del lienzo del día) */
+.agenda > .agenda-velo {
+  inset: 0;
+}
+.agenda > .agenda-ficha {
+  left: max(20px, calc(50% - 240px));
+  right: max(20px, calc(50% - 240px));
+  top: 16%;
+}
+.agenda-campo {
+  display: grid;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--tinta-2);
+}
+.agenda-campo input,
+.agenda-campo select {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-control);
+  background: #f1f0ec;
+  color: var(--tinta);
+  font: inherit;
+  font-size: 15px;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.14);
+}
+.agenda-campo input:focus-visible,
+.agenda-campo select:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 1px;
+}
+
+/* el mes */
+.agenda-mes {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  min-height: 0;
+}
+.agenda-mes-rejilla {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  min-height: 0;
+}
+.agenda-mes-dia {
+  margin: 0;
+  padding-left: 8px;
+  font-size: 13px;
+  color: var(--tinta-2);
+}
+.agenda-mes-celda {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-align: left;
+  color: var(--tinta);
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.08);
+  transition: box-shadow 0.2s;
+}
+.agenda-mes-celda:not(:disabled):hover {
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.35);
+}
+.agenda-mes-celda[data-fuera] {
+  visibility: hidden;
+}
+.agenda-mes-celda[data-domingo] {
+  background: transparent;
+  color: var(--tinta-2);
+}
+.agenda-mes-celda[data-hoy] {
+  box-shadow: inset 0 0 0 2px var(--lima), inset 0 0 0 3px #a8ba0e;
+}
+.agenda-mes-num {
+  font-size: 1.35rem;
+  font-weight: 300;
+  line-height: 1;
+}
+.agenda-mes-citas {
+  font-size: 12.5px;
+  color: var(--tinta-2);
+}
+.agenda-mes-lineas {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 9px;
+  display: grid;
+  gap: 3px;
+}
+.agenda-mes-linea {
+  display: block;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(24, 25, 25, 0.08);
+}
+.agenda-mes-linea > span {
+  display: block;
+  height: 100%;
+  border-radius: 1px;
+  background: #4d5d67;
+}
+.agenda-mes-celda[data-pasado] .agenda-mes-linea > span {
+  background: #8b969c;
+}
+/* en el teléfono la celda mide ~45 px: «46 citas» se partía y las barras caían encima del número. Ahí va solo la
+   cifra (la palabra la dicen el resumen de arriba y la etiqueta del botón) y las barras quedan abajo, sin tocarla */
+.agenda[data-telefono] .agenda-mes-celda {
+  padding: 6px 5px 8px;
+}
+.agenda[data-telefono] .agenda-mes-num {
+  font-size: 1.1rem;
+}
+.agenda[data-telefono] .agenda-mes-citas-p,
+.agenda[data-telefono] .agenda-mes-celda[data-domingo] .agenda-mes-citas {
+  display: none;
+}
+.agenda[data-telefono] .agenda-mes-citas {
+  line-height: 1;
+}
+/* la celda del teléfono mide ~49 px de alto: el día, la cifra y una barra (el promedio); en el iPad y la PC, una por sillón */
+.agenda-mes-media,
+.agenda[data-telefono] .agenda-mes-lineas {
+  display: none;
+}
+.agenda[data-telefono] .agenda-mes-media {
+  display: block;
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 6px;
+}
+
+/* el teléfono: la agenda es una hoja; el día, una lista por hora */
+.agenda[data-telefono] {
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  grid-template-rows: auto auto auto auto auto;
+}
+.agenda[data-telefono] .agenda-cabeza {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.agenda[data-telefono] .agenda-resumen {
+  gap: 18px;
+}
+.agenda[data-telefono] .agenda-doctores {
+  margin-left: 0;
+}
+.agenda-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.agenda-lista-hora {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 8px;
+}
+.agenda-lista-h {
+  padding-top: 10px;
+  font-size: 14px;
+  color: var(--tinta-2);
+}
+.agenda-lista-hora[data-ahora] .agenda-lista-h {
+  color: var(--tinta);
+  font-weight: 600;
+}
+.agenda-lista-hora ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.agenda-lista-cita {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  min-height: 52px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  text-align: left;
+  color: #fff;
+  background: #3a4d57;
+}
+.agenda-lista-cita[data-estado="atendida"],
+.agenda-lista-cita[data-estado="no llegó"] {
+  background: #56656d;
+}
+.agenda-lista-cita[data-estado="en sillón"] {
+  box-shadow: inset 0 0 0 2px var(--lima);
+}
+.agenda-lista-cita[data-choque] {
+  box-shadow: inset 0 0 0 2px #f2b544;
+}
+.agenda-lista-quien {
+  font-size: 15px;
+  font-weight: 500;
+}
+.agenda-lista-que {
+  font-size: 13px;
+}
+.agenda-semana-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.agenda-semana-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.agenda-semana-dias {
+  display: flex;
+  gap: 4px;
+}
+.agenda-semana-chip {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  color: #fff;
+  font-size: 12.5px;
+}
+.agenda-semana-chip[data-libre] {
+  color: var(--tinta-2);
+  box-shadow: inset 0 0 0 1px rgba(24, 25, 25, 0.14);
+}
+.agenda-semana-chip[data-hoy] {
+  outline: 2px solid var(--lima);
+  outline-offset: 1px;
+}
+.agenda[data-telefono] > .agenda-ficha {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: auto;
+  bottom: 0;
+  border-radius: 18px 18px 0 0;
+}
+.agenda[data-telefono] > .agenda-velo {
+  position: fixed;
+}
+.agenda[data-telefono] > .agenda-aviso {
+  position: fixed;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+}
