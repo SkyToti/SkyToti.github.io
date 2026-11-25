@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://skytoti.github.io/sitemap.xml

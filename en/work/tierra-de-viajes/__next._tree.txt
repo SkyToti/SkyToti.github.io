@@ -1,0 +1,11 @@
+:HL["/_next/static/chunks/34gqrv1y7_p2o.css","style"]
+:HL["/_next/static/chunks/1ii-3zshwy_ds.css","style"]
+:HL["/_next/static/media/53897e768d329f66-s.p.3t6q91iet4nsy.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/fe68a48bcbeff111-s.p.1jake7ccbq8_p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/chunks/2-u6185xz2p93.css","style"]
+5:[["children",{"s":"__PAGE__","h":160}]]
+4:[["children",{"s":{"n":"slug","t":"d","k":"tierra-de-viajes","s":[]},"h":65632,"c":"$Q5"}]]
+3:[["children",{"s":"work","h":131168,"c":"$Q4"}]]
+2:[["children",{"s":"en","h":131184,"c":"$Q3"}]]
+1:[["children",{"s":"(en)","h":131184,"c":"$Q2"}]]
+0:{"b":"55FDobuXlWSB7-rEDUD-3","t":{"t":{"s":"","h":131152,"c":"$Q1"}}}
